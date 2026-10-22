@@ -285,7 +285,7 @@ $('#mx').onclick=close;modal.onclick=e=>{if(e.target===modal)close()};
 addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 const SN={hp:'HP','attack':'ATK','defense':'DEF','special-attack':'SATK','special-defense':'SDEF',speed:'SPD'};
 
-async function openPokemon(id,captured){
+async function openPokemon(id,captured){ 
   const my=++tok;
   modal.classList.add('on');$('#mbody').innerHTML='<div class="loading">CARREGANDO...</div>';
   try{
