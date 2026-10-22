@@ -1,336 +1,1048 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POKEX - Portal Voxel Pixelmon</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0b0f19;--card:#0f172a;--card2:#131c31;--line:#1e293b;--red:#ef4444;--rose:#fb7185;--amber:#fbbf24;--blue:#38bdf8;--green:#4ade80;--text:#f1f5f9;--mute:#94a3b8}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:18px;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
-.px{font-family:'Press Start 2P',cursive}
-a{color:inherit}
-/* cubos flutuantes */
-.cube{position:fixed;z-index:0;pointer-events:none;opacity:.45;box-shadow:inset -5px -5px 0 rgba(0,0,0,.3),inset 5px 5px 0 rgba(255,255,255,.35);animation:bob var(--d) ease-in-out infinite alternate}
-@keyframes bob{from{transform:translateY(0) rotate(0)}to{transform:translateY(-38px) rotate(90deg)}}
-main,header,footer{position:relative;z-index:1}
-/* botão estilo Minecraft */
-.mc{display:inline-block;background:var(--red);color:#fff;border:4px solid #05070d;padding:.8rem 1.3rem;font-family:'Press Start 2P',cursive;font-size:.7rem;line-height:1.4;text-decoration:none;cursor:pointer;text-shadow:2px 2px 0 rgba(0,0,0,.45);box-shadow:inset -4px -4px 0 rgba(0,0,0,.35),inset 4px 4px 0 rgba(255,255,255,.3);transition:transform .1s}
-.mc:hover{filter:brightness(1.15);transform:translateY(-2px)}
-.mc:active{transform:translateY(2px);box-shadow:inset 4px 4px 0 rgba(0,0,0,.35)}
-.mc.blue{background:#0ea5e9}.mc.amber{background:#d97706}.mc.green{background:#16a34a}
-/* header */
-header{position:sticky;top:0;z-index:100;background:rgba(11,15,25,.88);backdrop-filter:blur(12px);border-bottom:4px solid #05070d;box-shadow:0 4px 0 var(--red);padding:.7rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-#chz{width:88px;height:55px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 8px rgba(56,189,248,.8));animation:float 2.4s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-5px)}}
-.brand b{font-family:'Press Start 2P',cursive;font-size:1.25rem;background:linear-gradient(90deg,var(--red),var(--rose),var(--amber));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
-nav{display:flex;gap:.6rem;flex-wrap:wrap}
-nav a{font-family:'Press Start 2P',cursive;font-size:.6rem;text-decoration:none;color:var(--mute);padding:.7rem .8rem;border:3px solid transparent;transition:.2s}
-nav a:hover{color:var(--amber);border-color:var(--line);background:var(--card)}
-/* hero */
-.hero{position:relative;height:78vh;min-height:560px;background:radial-gradient(circle at 50% 55%,rgba(239,68,68,.18),transparent 55%),radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 40%)}
-#stage{position:absolute;inset:0;cursor:grab}#stage:active{cursor:grabbing}
-.ho{position:absolute;top:1.4rem;left:0;right:0;text-align:center;pointer-events:none;padding:0 1rem}
-.ho h1{font-family:'Press Start 2P',cursive;font-size:clamp(1.3rem,5vw,2.8rem);color:#fff;text-shadow:3px 3px 0 var(--red),6px 6px 0 #05070d;letter-spacing:3px}
-.ho p{color:var(--amber);letter-spacing:2px;margin-top:1rem;font-weight:700}
-.hb{position:absolute;bottom:1.2rem;left:0;right:0;text-align:center;pointer-events:none;color:var(--mute);padding:0 1rem}
-.hb .mc{pointer-events:auto;margin-top:.6rem}
-/* seções */
-.sec{max-width:1200px;margin:0 auto;padding:4rem 1.3rem;width:100%}
-.sec h2{font-family:'Press Start 2P',cursive;font-size:clamp(1rem,3.4vw,1.6rem);margin-bottom:.8rem;text-shadow:3px 3px 0 #05070d;color:var(--amber)}
-.sub{color:var(--mute);margin-bottom:2rem;max-width:70ch;line-height:1.5}
-.grass{height:24px;background:linear-gradient(#4ade80 0 8px,#16a34a 8px 12px,#78350f 12px);border-top:4px solid #05070d;border-bottom:4px solid #05070d;image-rendering:pixelated;position:relative;z-index:1}
-.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.4rem}
-.box{background:var(--card);border:4px solid #05070d;box-shadow:inset 0 0 0 3px var(--line),6px 6px 0 rgba(0,0,0,.5);padding:1.4rem}
-.box h3{font-family:'Press Start 2P',cursive;font-size:.8rem;color:var(--blue);margin-bottom:.8rem;line-height:1.5}
-.box p,.box li{color:var(--mute);line-height:1.5}
-.feat .box:nth-child(1) h3{color:var(--red)}.feat .box:nth-child(3) h3{color:var(--green)}
-.feat .box{animation:bobc 4s ease-in-out infinite alternate}.feat .box:nth-child(2){animation-delay:-1.3s}.feat .box:nth-child(3){animation-delay:-2.6s}
-@keyframes bobc{to{transform:translateY(-8px)}}
-/* pokédex */
-.tools{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-#q{flex:1;min-width:200px;background:var(--card);color:var(--text);border:4px solid #05070d;box-shadow:inset 0 0 0 3px var(--line);padding:.8rem 1rem;font:700 1rem 'Rajdhani',sans-serif}
-#q:focus{outline:3px solid var(--amber)}
-#tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
-.tab{border:3px solid #05070d;background:var(--card);color:#fff;font:700 .95rem 'Rajdhani',sans-serif;padding:.4rem .8rem;cursor:pointer;box-shadow:inset -3px -3px 0 rgba(0,0,0,.35),inset 3px 3px 0 rgba(255,255,255,.2);text-shadow:1px 1px 0 rgba(0,0,0,.5);transition:transform .1s}
-.tab:hover{transform:translateY(-2px)}
-.tab.on{outline:3px solid var(--amber);transform:translateY(-2px)}
-#count{color:var(--mute);font-weight:700}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}
-.pc{background:var(--card);border:4px solid #05070d;box-shadow:inset 0 0 0 3px var(--line);padding:.8rem .5rem;text-align:center;cursor:pointer;transition:.2s}
-.pc:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:inset 0 0 0 3px var(--red),0 8px 20px rgba(239,68,68,.25)}
-.pc img{width:96px;height:96px;image-rendering:pixelated;filter:drop-shadow(0 4px 0 rgba(0,0,0,.4))}
-.pc small{display:block;color:var(--mute);font-weight:700}
-.pc b{display:block;font-size:1.05rem;text-transform:capitalize;margin:.1rem 0 .4rem}
-.tb{display:inline-block;padding:.15rem .6rem;margin:2px;border:2px solid #05070d;color:#fff;font-weight:700;font-size:.8rem;text-shadow:1px 1px 0 rgba(0,0,0,.55)}
-.msg{color:var(--mute);padding:2rem;text-align:center;grid-column:1/-1}
-#more{display:none;margin:1.6rem auto 0}
-/* modal */
-.modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(5,7,13,.82);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
-.modal.on{display:flex;animation:fi .25s}
-@keyframes fi{from{opacity:0}}
-.mbox{position:relative;background:var(--card);border:4px solid #05070d;box-shadow:inset 0 0 0 4px var(--red),0 0 40px rgba(239,68,68,.35);width:100%;max-width:620px;padding:2rem 1.4rem;margin:auto}
-.x{position:absolute;top:.6rem;right:.6rem;background:var(--red);color:#fff;border:3px solid #05070d;width:38px;height:38px;font:700 1rem 'Press Start 2P';cursor:pointer}
-.hd{text-align:center}
-.hd .id{color:var(--amber);font-weight:700;font-size:1.1rem}
-.hd h2{font-family:'Press Start 2P',cursive;font-size:clamp(.9rem,4vw,1.3rem);text-transform:capitalize;margin:.4rem 0;color:#fff;text-shadow:3px 3px 0 var(--red)}
-.hd img{width:200px;height:200px;object-fit:contain;animation:pop .7s cubic-bezier(.2,1.6,.4,1)}
-@keyframes pop{from{transform:scale(0) rotate(-180deg);filter:brightness(5)}}
-.genus{color:var(--mute);font-style:italic}
-.desc{margin:1rem 0;line-height:1.5;color:#cbd5e1;text-align:center}
-.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:1rem 0}
-.info div{background:var(--bg);border:3px solid var(--line);padding:.5rem;text-align:center}
-.info span{display:block;color:var(--mute);font-size:.8rem;font-weight:700}
-.st{display:grid;grid-template-columns:48px 36px 1fr;align-items:center;gap:.5rem;margin:.35rem 0;font-weight:700}
-.st i{font-style:normal;color:var(--mute);font-size:.85rem}
-.bar{height:14px;background:var(--bg);border:3px solid #05070d}
-.bar u{display:block;height:100%;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
-.mt{margin:1.2rem 0 .3rem;font-family:'Press Start 2P',cursive;font-size:.62rem;color:var(--blue);line-height:1.6}
-.evo{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
-.evo .n{text-align:center;cursor:pointer;padding:.3rem;border:3px solid transparent}
-.evo .n:hover,.evo .n.cur{border-color:var(--amber);background:var(--bg)}
-.evo img{width:64px;height:64px;image-rendering:pixelated;display:block;margin:auto}
-.evo .n span{font-size:.85rem;font-weight:700;text-transform:capitalize}
-.evo .ar{color:var(--amber);font-size:.8rem;font-weight:700;text-align:center}
-.evo .br{display:flex;flex-direction:column;gap:.3rem}
-.evo .rw{display:flex;align-items:center;gap:.5rem}
-.loading{text-align:center;padding:3rem 0;color:var(--amber);font-family:'Press Start 2P';font-size:.7rem;animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.3}}
-#flash{position:fixed;inset:0;z-index:999;pointer-events:none;background:radial-gradient(circle,#fff,rgba(255,255,255,.6) 40%,transparent 70%);opacity:0}
-#flash.on{animation:fl .8s}
-@keyframes fl{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
-/* pixelmon */
-.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.4rem}
-.dl ol{padding-left:1.3rem}.dl li{margin:.4rem 0}
-.btns{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1rem}
-.big{background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(56,189,248,.14)),var(--card);animation:glow 2.5s ease-in-out infinite alternate}
-@keyframes glow{to{box-shadow:inset 0 0 0 3px var(--line),0 0 28px rgba(251,191,36,.35),6px 6px 0 rgba(0,0,0,.5)}}
-footer{margin-top:auto;background:var(--card);border-top:4px solid #05070d;padding:1.6rem;text-align:center;color:var(--mute);font-size:.95rem}
-@media(max-width:600px){header{justify-content:center}nav a{font-size:.52rem;padding:.6rem .5rem}.hero{height:74vh;min-height:520px}#grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}.mbox{padding:2rem 1rem}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POKEX - Portal Voxel Pixelmon</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #0f172a;
+      --card2: #131c31;
+      --line: #1e293b;
+      --red: #ef4444;
+      --rose: #fb7185;
+      --amber: #fbbf24;
+      --blue: #38bdf8;
+      --green: #4ade80;
+      --text: #f1f5f9;
+      --mute: #94a3b8
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 84px
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column
+    }
+
+    .px {
+      font-family: 'Press Start 2P', cursive
+    }
+
+    a {
+      color: inherit
+    }
+
+    /* cubos flutuantes */
+    .cube {
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .45;
+      box-shadow: inset -5px -5px 0 rgba(0, 0, 0, .3), inset 5px 5px 0 rgba(255, 255, 255, .35);
+      animation: bob var(--d) ease-in-out infinite alternate
+    }
+
+    @keyframes bob {
+      from {
+        transform: translateY(0) rotate(0)
+      }
+
+      to {
+        transform: translateY(-38px) rotate(90deg)
+      }
+    }
+
+    main,
+    header,
+    footer {
+      position: relative;
+      z-index: 1
+    }
+
+    /* botão estilo Minecraft */
+    .mc {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      border: 4px solid #05070d;
+      padding: .8rem 1.3rem;
+      font-family: 'Press Start 2P', cursive;
+      font-size: .7rem;
+      line-height: 1.4;
+      text-decoration: none;
+      cursor: pointer;
+      text-shadow: 2px 2px 0 rgba(0, 0, 0, .45);
+      box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .35), inset 4px 4px 0 rgba(255, 255, 255, .3);
+      transition: transform .1s
+    }
+
+    .mc:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px)
+    }
+
+    .mc:active {
+      transform: translateY(2px);
+      box-shadow: inset 4px 4px 0 rgba(0, 0, 0, .35)
+    }
+
+    .mc.blue {
+      background: #0ea5e9
+    }
+
+    .mc.amber {
+      background: #d97706
+    }
+
+    .mc.green {
+      background: #16a34a
+    }
+
+    /* header */
+
+    header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(11, 15, 25, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 4px solid #05070d;
+  box-shadow: 0 4px 0 #ff3366; /* Sua linha vermelha base */
+  padding: .7rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  
+  /* Efeito RGB que altera a cor da linha suavemente sem dar erro no CSS */
+  filter: drop-shadow(0 4px 0 #ff3366);
+  animation: rgbHue 6s linear infinite;
+}
+
+/* Animação simplificada de rotação de cores */
+@keyframes rgbHue {
+  0%   { filter: hue-rotate(0deg); }     /* Cor original (Vermelho/Rosa) */
+  33%  { filter: hue-rotate(120deg); }   /* Transiciona para Azul/Ciano */
+  66%  { filter: hue-rotate(240deg); }   /* Transiciona para Verde */
+  100% { filter: hue-rotate(360deg); }   /* Volta para a cor original */
+}
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none
+    }
+
+    #chz {
+      width: 88px;
+      height: 55px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, .8));
+      animation: float 2.4s ease-in-out infinite
+    }
+
+    @keyframes float {
+      50% {
+        transform: translateY(-5px)
+      }
+    }
+
+    .brand b {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.25rem;
+      background: linear-gradient(90deg, var(--blue), var(--rose), var(--amber));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px
+    }
+
+    nav {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap
+    }
+
+    nav a {
+      font-family: 'Press Start 2P', cursive;
+      font-size: .6rem;
+      text-decoration: none;
+      color: var(--mute);
+      padding: .7rem .8rem;
+      border: 3px solid transparent;
+      transition: .2s
+    }
+
+    nav a:hover {
+      color: var(--amber);
+      border-color: var(--line);
+      background: var(--card)
+    }
+
+    /* hero */
+    .hero {
+      position: relative;
+      height: 78vh;
+      min-height: 560px;
+      background: radial-gradient(circle at 50% 55%, rgba(239, 68, 68, .18), transparent 55%), radial-gradient(circle at 85% 85%, rgba(56, 189, 248, .12), transparent 40%)
+    }
+
+    #stage {
+      position: absolute;
+      inset: 0;
+      cursor: grab
+    }
+
+    #stage:active {
+      cursor: grabbing
+    }
+
+    .ho {
+      position: absolute;
+      top: 1.4rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+      padding: 0 1rem
+    }
+
+    .ho h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.3rem, 5vw, 2.8rem);
+      color: #fff;
+      text-shadow: 3px 3px 0 var(--red), 6px 6px 0 #05070d;
+      letter-spacing: 3px
+    }
+
+    .ho p {
+      color: var(--amber);
+      letter-spacing: 2px;
+      margin-top: 1rem;
+      font-weight: 700
+    }
+
+    .hb {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+      color: var(--mute);
+      padding: 0 1rem
+    }
+
+    .hb .mc {
+      pointer-events: auto;
+      margin-top: .6rem
+    }
+
+    /* seções */
+    .sec {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.3rem;
+      width: 100%
+    }
+
+    .sec h2 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1rem, 3.4vw, 1.6rem);
+      margin-bottom: .8rem;
+      text-shadow: 3px 3px 0 #05070d;
+      color: var(--amber)
+    }
+
+    .sub {
+      color: var(--mute);
+      margin-bottom: 2rem;
+      max-width: 70ch;
+      line-height: 1.5
+    }
+
+    .grass {
+      height: 24px;
+      background: linear-gradient(#4ade80 0 8px, #16a34a 8px 12px, #78350f 12px);
+      border-top: 4px solid #05070d;
+      border-bottom: 4px solid #05070d;
+      image-rendering: pixelated;
+      position: relative;
+      z-index: 1
+    }
+
+    .feat {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.4rem
+    }
+
+    .box {
+      background: var(--card);
+      border: 4px solid #05070d;
+      box-shadow: inset 0 0 0 3px var(--line), 6px 6px 0 rgba(0, 0, 0, .5);
+      padding: 1.4rem
+    }
+
+    .box h3 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: .8rem;
+      color: var(--blue);
+      margin-bottom: .8rem;
+      line-height: 1.5
+    }
+
+    .box p,
+    .box li {
+      color: var(--mute);
+      line-height: 1.5
+    }
+
+    .feat .box:nth-child(1) h3 {
+      color: var(--red)
+    }
+
+    .feat .box:nth-child(3) h3 {
+      color: var(--green)
+    }
+
+    .feat .box {
+      animation: bobc 4s ease-in-out infinite alternate
+    }
+
+    .feat .box:nth-child(2) {
+      animation-delay: -1.3s
+    }
+
+    .feat .box:nth-child(3) {
+      animation-delay: -2.6s
+    }
+
+    @keyframes bobc {
+      to {
+        transform: translateY(-8px)
+      }
+    }
+
+    /* pokédex */
+    .tools {
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 1rem
+    }
+
+    #q {
+      flex: 1;
+      min-width: 200px;
+      background: var(--card);
+      color: var(--text);
+      border: 4px solid #05070d;
+      box-shadow: inset 0 0 0 3px var(--line);
+      padding: .8rem 1rem;
+      font: 700 1rem 'Rajdhani', sans-serif
+    }
+
+    #q:focus {
+      outline: 3px solid var(--amber)
+    }
+
+    #tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 1.2rem
+    }
+
+    .tab {
+      border: 3px solid #05070d;
+      background: var(--card);
+      color: #fff;
+      font: 700 .95rem 'Rajdhani', sans-serif;
+      padding: .4rem .8rem;
+      cursor: pointer;
+      box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .35), inset 3px 3px 0 rgba(255, 255, 255, .2);
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+      transition: transform .1s
+    }
+
+    .tab:hover {
+      transform: translateY(-2px)
+    }
+
+    .tab.on {
+      outline: 3px solid var(--amber);
+      transform: translateY(-2px)
+    }
+
+    #count {
+      color: var(--mute);
+      font-weight: 700
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem
+    }
+
+    .pc {
+      background: var(--card);
+      border: 4px solid #05070d;
+      box-shadow: inset 0 0 0 3px var(--line);
+      padding: .8rem .5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .pc:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      box-shadow: inset 0 0 0 3px var(--red), 0 8px 20px rgba(239, 68, 68, .25)
+    }
+
+    .pc img {
+      width: 96px;
+      height: 96px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .4))
+    }
+
+    .pc small {
+      display: block;
+      color: var(--mute);
+      font-weight: 700
+    }
+
+    .pc b {
+      display: block;
+      font-size: 1.05rem;
+      text-transform: capitalize;
+      margin: .1rem 0 .4rem
+    }
+
+    .tb {
+      display: inline-block;
+      padding: .15rem .6rem;
+      margin: 2px;
+      border: 2px solid #05070d;
+      color: #fff;
+      font-weight: 700;
+      font-size: .8rem;
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, .55)
+    }
+
+    .msg {
+      color: var(--mute);
+      padding: 2rem;
+      text-align: center;
+      grid-column: 1/-1
+    }
+
+    #more {
+      display: none;
+      margin: 1.6rem auto 0
+    }
+
+    /* modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(5, 7, 13, .82);
+      backdrop-filter: blur(8px);
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto
+    }
+
+    .modal.on {
+      display: flex;
+      animation: fi .25s
+    }
+
+    @keyframes fi {
+      from {
+        opacity: 0
+      }
+    }
+
+    .mbox {
+      position: relative;
+      background: var(--card);
+      border: 4px solid #05070d;
+      box-shadow: inset 0 0 0 4px var(--red), 0 0 40px rgba(239, 68, 68, .35);
+      width: 100%;
+      max-width: 620px;
+      padding: 2rem 1.4rem;
+      margin: auto
+    }
+
+    .x {
+      position: absolute;
+      top: .6rem;
+      right: .6rem;
+      background: var(--red);
+      color: #fff;
+      border: 3px solid #05070d;
+      width: 38px;
+      height: 38px;
+      font: 700 1rem 'Press Start 2P';
+      cursor: pointer
+    }
+
+    .hd {
+      text-align: center
+    }
+
+    .hd .id {
+      color: var(--amber);
+      font-weight: 700;
+      font-size: 1.1rem
+    }
+
+    .hd h2 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(.9rem, 4vw, 1.3rem);
+      text-transform: capitalize;
+      margin: .4rem 0;
+      color: #fff;
+      text-shadow: 3px 3px 0 var(--red)
+    }
+
+    .hd img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      animation: pop .7s cubic-bezier(.2, 1.6, .4, 1)
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(0) rotate(-180deg);
+        filter: brightness(5)
+      }
+    }
+
+    .genus {
+      color: var(--mute);
+      font-style: italic
+    }
+
+    .desc {
+      margin: 1rem 0;
+      line-height: 1.5;
+      color: #cbd5e1;
+      text-align: center
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: .6rem;
+      margin: 1rem 0
+    }
+
+    .info div {
+      background: var(--bg);
+      border: 3px solid var(--line);
+      padding: .5rem;
+      text-align: center
+    }
+
+    .info span {
+      display: block;
+      color: var(--mute);
+      font-size: .8rem;
+      font-weight: 700
+    }
+
+    .st {
+      display: grid;
+      grid-template-columns: 48px 36px 1fr;
+      align-items: center;
+      gap: .5rem;
+      margin: .35rem 0;
+      font-weight: 700
+    }
+
+    .st i {
+      font-style: normal;
+      color: var(--mute);
+      font-size: .85rem
+    }
+
+    .bar {
+      height: 14px;
+      background: var(--bg);
+      border: 3px solid #05070d
+    }
+
+    .bar u {
+      display: block;
+      height: 100%;
+      width: 0;
+      transition: width 1s cubic-bezier(.2, .8, .2, 1)
+    }
+
+    .mt {
+      margin: 1.2rem 0 .3rem;
+      font-family: 'Press Start 2P', cursive;
+      font-size: .62rem;
+      color: var(--blue);
+      line-height: 1.6
+    }
+
+    .evo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .evo .n {
+      text-align: center;
+      cursor: pointer;
+      padding: .3rem;
+      border: 3px solid transparent
+    }
+
+    .evo .n:hover,
+    .evo .n.cur {
+      border-color: var(--amber);
+      background: var(--bg)
+    }
+
+    .evo img {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      display: block;
+      margin: auto
+    }
+
+    .evo .n span {
+      font-size: .85rem;
+      font-weight: 700;
+      text-transform: capitalize
+    }
+
+    .evo .ar {
+      color: var(--amber);
+      font-size: .8rem;
+      font-weight: 700;
+      text-align: center
+    }
+
+    .evo .br {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem
+    }
+
+    .evo .rw {
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--amber);
+      font-family: 'Press Start 2P';
+      font-size: .7rem;
+      animation: blink 1s infinite
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: .3
+      }
+    }
+
+    #flash {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background: radial-gradient(circle, #fff, rgba(255, 255, 255, .6) 40%, transparent 70%);
+      opacity: 0
+    }
+
+    #flash.on {
+      animation: fl .8s
+    }
+
+    @keyframes fl {
+      0% {
+        opacity: 0
+      }
+
+      35% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    /* pixelmon */
+    .dl {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.4rem
+    }
+
+    .dl ol {
+      padding-left: 1.3rem
+    }
+
+    .dl li {
+      margin: .4rem 0
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1rem
+    }
+
+    .big {
+      background: linear-gradient(135deg, rgba(239, 68, 68, .18), rgba(56, 189, 248, .14)), var(--card);
+      animation: glow 2.5s ease-in-out infinite alternate
+    }
+
+    @keyframes glow {
+      to {
+        box-shadow: inset 0 0 0 3px var(--line), 0 0 28px rgba(251, 191, 36, .35), 6px 6px 0 rgba(0, 0, 0, .5)
+      }
+    }
+
+    footer {
+      margin-top: auto;
+      background: var(--card);
+      border-top: 4px solid #05070d;
+      padding: 1.6rem;
+      text-align: center;
+      color: var(--mute);
+      font-size: .95rem
+    }
+
+    @media(max-width:600px) {
+      header {
+        justify-content: center
+      }
+
+      nav a {
+        font-size: .52rem;
+        padding: .6rem .5rem
+      }
+
+      .hero {
+        height: 74vh;
+        min-height: 520px
+      }
+
+      #grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr))
+      }
+
+      .mbox {
+        padding: 2rem 1rem
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <a href="#inicio" class="brand"><img id="chz" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAZCAYAAABD2GxlAAADQUlEQVR4nM2Wv2obQRDGvz0bB1yocaEuYHApUhhXKQWjUo/gRu9gfPcAXmHII7jRIxyptHClK+PCqHTrwoUaFQEbrEmxO6u5vTslUhLIB6s76XZnf5p/t8D+4jD+qbI91zEAEFG833GtHltldiUDwAEsyjmn7bG6BxIIa21tbZ7nWzn+CNA5Bw3rnIsAYeMm0MW1v6G49VaGwz0Ao8e64EQRVqAATPrvuPvy6ZdgonoOOmY4TvMi/W5kqNB6kOC1PM9rcJP+exwAMHl6E7vdOTjzHBtAxzw+WafTGDNugxTjRnuTiCKkgApUqsnTmwZtwBVf/bUR4vHJGqVjBpm2EHAwAFxuHruruYe8HYGIkHpWK4RXa2MoeG08WKO9wTjm8eOHhJmttWyt1aHgYITb1hARwxcRA+DJ01scMX0ct4d25u0Uz8zFM8s+qkgcc3EKLFbBi+HnqqpkBltrgZcpKu8lhmM/d5mBbkdNb70etXoRjgEyjKRQBr0Mi5WkWaY+gxarNQa9DOX5AYgIVVVhOByCiGLSy2+t+yZtpyYyurV4SO3JS2Nu7v1tuciAS59ih8qAKR3zoOe/aogUSBcCEDx+NQdhFEEDQCoTPNepQS+L0QPSTCRjbs5Mo58BtVB7hfCminBkGvMRKj8ZXjNmXxyhSNraTEsPjHDz+bwWcvm3AFAuM9iHafS0fZjKH26CbpHYk+sGMPRA8Yh4S65z1Tbyi2u4q3nsb+UyA8g0Xm1yJaLfgww5uFitcXOPmIOZVK8Uh7UWw+EwwsnGo5HPr0n/HcUp0D8+wuuPTRMeP37U5mspyG2kbF+mKM8PIpxfELwncG0S2M/fvkcw3UKKU+DmzERQbSvPc+jDRdxXgQHe41VVyZz4/FCqtw1IPCmGi2MPdfd6hPCmYe+5DMWzN6GLTMOJSHpokHZKCucBAdkMeZ4zEcVkFzjZPGmiTEQ+JI8fGPSy6EUtnS7yGmzrlV3nws73LTPDGFNrJ+UyVFfwXnrcknXT6bR2opE/K/Pa1nWwbE/a+FxSoHmA6IQ0xnQC7sCw14k6Vb13hia9BW6nPfc6USeqbxheZY03z38oZvZHsOTItpP+Roi3SUPttddPGhYCYNfcq4oAAAAASUVORK5CYII=" alt="Mega Charizard X em pixel art"><b>POKEX</b></a>
-  <nav><a href="#inicio">Início</a><a href="#pokedex">Pokédex</a><a href="#pixelmon">Pixelmon</a></nav>
-</header>
+  <header>
+    <a href="#inicio" class="brand"><img id="chz"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAZCAYAAABD2GxlAAADQUlEQVR4nM2Wv2obQRDGvz0bB1yocaEuYHApUhhXKQWjUo/gRu9gfPcAXmHII7jRIxyptHClK+PCqHTrwoUaFQEbrEmxO6u5vTslUhLIB6s76XZnf5p/t8D+4jD+qbI91zEAEFG833GtHltldiUDwAEsyjmn7bG6BxIIa21tbZ7nWzn+CNA5Bw3rnIsAYeMm0MW1v6G49VaGwz0Ao8e64EQRVqAATPrvuPvy6ZdgonoOOmY4TvMi/W5kqNB6kOC1PM9rcJP+exwAMHl6E7vdOTjzHBtAxzw+WafTGDNugxTjRnuTiCKkgApUqsnTmwZtwBVf/bUR4vHJGqVjBpm2EHAwAFxuHruruYe8HYGIkHpWK4RXa2MoeG08WKO9wTjm8eOHhJmttWyt1aHgYITb1hARwxcRA+DJ01scMX0ct4d25u0Uz8zFM8s+qkgcc3EKLFbBi+HnqqpkBltrgZcpKu8lhmM/d5mBbkdNb70etXoRjgEyjKRQBr0Mi5WkWaY+gxarNQa9DOX5AYgIVVVhOByCiGLSy2+t+yZtpyYyurV4SO3JS2Nu7v1tuciAS59ih8qAKR3zoOe/aogUSBcCEDx+NQdhFEEDQCoTPNepQS+L0QPSTCRjbs5Mo58BtVB7hfCminBkGvMRKj8ZXjNmXxyhSNraTEsPjHDz+bwWcvm3AFAuM9iHafS0fZjKH26CbpHYk+sGMPRA8Yh4S65z1Tbyi2u4q3nsb+UyA8g0Xm1yJaLfgww5uFitcXOPmIOZVK8Uh7UWw+EwwsnGo5HPr0n/HcUp0D8+wuuPTRMeP37U5mspyG2kbF+mKM8PIpxfELwncG0S2M/fvkcw3UKKU+DmzERQbSvPc+jDRdxXgQHe41VVyZz4/FCqtw1IPCmGi2MPdfd6hPCmYe+5DMWzN6GLTMOJSHpokHZKCucBAdkMeZ4zEcVkFzjZPGmiTEQ+JI8fGPSy6EUtnS7yGmzrlV3nws73LTPDGFNrJ+UyVFfwXnrcknXT6bR2opE/K/Pa1nWwbE/a+FxSoHmA6IQ0xnQC7sCw14k6Vb13hia9BW6nPfc6USeqbxheZY03z38oZvZHsOTItpP+Roi3SUPttddPGhYCYNfcq4oAAAAASUVORK5CYII="
+        alt="Mega Charizard X em pixel art"><b>POKEX</b></a>
+    <nav><a href="#inicio">Início</a><a href="#pokedex">Pokédex</a><a href="#pixelmon">Pixelmon</a></nav>
+  </header>
 
-<main>
-  <section class="hero" id="inicio">
-    <div id="stage"></div>
-    <div class="ho"><h1>POKÉBOLA VOXEL</h1><p>CLIQUE NO BOTÃO BRANCO CENTRAL</p></div>
-    <div class="hb">Arraste para girar e achar o botão<br><button class="mc" id="catchBtn">Capturar Pokémon</button></div>
-  </section>
-  <div class="grass"></div>
+  <main>
+    <section class="hero" id="inicio">
+      <div id="stage"></div>
+      <div class="ho">
+        <h1>POKÉBOLA VOXEL</h1>
+        <p>CLIQUE NO BOTÃO BRANCO CENTRAL</p>
+      </div>
+      <div class="hb">Arraste para girar e achar o botão<br><button class="mc" id="catchBtn">Capturar Pokémon</button>
+      </div>
+    </section>
+    <div class="grass"></div>
 
-  <section class="sec">
-    <div class="feat">
-      <div class="box"><h3>SISTEMA PIXELMON</h3><p>Pokédex completa com tipos, stats, evoluções e vantagens de batalha de cada espécie.</p></div>
-      <div class="box"><h3>MUNDO VOXEL 3D</h3><p>Uma Pokébola montada bloco a bloco, que você gira em 360° com o mouse ou o dedo.</p></div>
-      <div class="box"><h3>CAPTURA ALEATÓRIA</h3><p>Acerte o botão central e um Pokémon surge com nome, tipos e stats.</p></div>
-    </div>
-  </section>
-  <div class="grass"></div>
-
-  <section class="sec" id="pokedex">
-    <h2>POKÉDEX</h2>
-    <p class="sub">Escolha um tipo e clique em qualquer Pokémon para ver informações, stats, evoluções e contra quais tipos ele é forte ou fraco. Dados da PokéAPI.</p>
-    <div class="tools"><input id="q" type="search" placeholder="Buscar por nome ou número..." aria-label="Buscar Pokémon"><span id="count"></span></div>
-    <div id="tabs"></div>
-    <div id="grid"><div class="msg loading">CARREGANDO POKÉDEX...</div></div>
-    <button class="mc blue" id="more">Carregar mais</button>
-  </section>
-  <div class="grass"></div>
-
-  <section class="sec" id="pixelmon">
-    <h2>PIXELMON NO MINECRAFT</h2>
-    <p class="sub">Pixelmon é o mod que coloca Pokémon dentro do Minecraft: capture, treine e batalhe em mundos de blocos. Baixe somente pelas fontes oficiais.</p>
-    <div class="dl">
-      <div class="box big">
-        <h3>BAIXAR O MOD</h3>
-        <p>Na página oficial, escolha o arquivo .jar da mesma versão do Minecraft que você vai jogar.</p>
-        <div class="btns">
-          <a class="mc green" href="https://pixelmonmod.com/" target="_blank" rel="noopener">Site oficial</a>
-          <a class="mc amber" href="https://www.curseforge.com/minecraft/mc-mods/pixelmon" target="_blank" rel="noopener">CurseForge</a>
-          <a class="mc blue" href="https://pixelmonmod.com/wiki/Pixelmon" target="_blank" rel="noopener">Wiki</a>
+    <section class="sec">
+      <div class="feat">
+        <div class="box">
+          <h3>SISTEMA PIXELMON</h3>
+          <p>Pokédex completa com tipos, stats, evoluções e vantagens de batalha de cada espécie.</p>
+        </div>
+        <div class="box">
+          <h3>MUNDO VOXEL 3D</h3>
+          <p>Uma Pokébola montada bloco a bloco, que você gira em 360° com o mouse ou o dedo.</p>
+        </div>
+        <div class="box">
+          <h3>CAPTURA ALEATÓRIA</h3>
+          <p>Acerte o botão central e um Pokémon surge com nome, tipos e stats.</p>
         </div>
       </div>
-      <div class="box">
-        <h3>COMO INSTALAR</h3>
-        <ol>
-          <li>Instale o Forge ou NeoForge da versão do Minecraft desejada.</li>
-          <li>Baixe o .jar do Pixelmon compatível com essa versão.</li>
-          <li>Coloque o arquivo na pasta <b>mods</b> do Minecraft.</li>
-          <li>Reserve pelo menos 2 GB de RAM e abra o jogo.</li>
-        </ol>
+    </section>
+    <div class="grass"></div>
+
+    <section class="sec" id="pokedex">
+      <h2>POKÉDEX</h2>
+      <p class="sub">Escolha um tipo e clique em qualquer Pokémon para ver informações, stats, evoluções e contra quais
+        tipos ele é forte ou fraco. Dados da PokéAPI.</p>
+      <div class="tools"><input id="q" type="search" placeholder="Buscar por nome ou número..."
+          aria-label="Buscar Pokémon"><span id="count"></span></div>
+      <div id="tabs"></div>
+      <div id="grid">
+        <div class="msg loading">CARREGANDO POKÉDEX...</div>
       </div>
-      <div class="box">
-        <h3>VERSÕES SUPORTADAS</h3>
-        <ol><li>1.21.1 (NeoForge): desenvolvimento ativo</li><li>1.20.2 e 1.20.1 (Forge)</li><li>1.16.5 (Forge): estável</li><li>1.12.2 (Forge): legado</li></ol>
-        <p style="margin-top:.6rem">Versões listadas na wiki oficial. Confira a página de downloads para a lista atual. O mod é para PC.</p>
+      <button class="mc blue" id="more">Carregar mais</button>
+    </section>
+    <div class="grass"></div>
+
+    <section class="sec" id="pixelmon">
+      <h2>PIXELMON NO MINECRAFT</h2>
+      <p class="sub">Pixelmon é o mod que coloca Pokémon dentro do Minecraft: capture, treine e batalhe em mundos de
+        blocos. Baixe somente pelas fontes oficiais.</p>
+      <div class="dl">
+        <div class="box big">
+          <h3>BAIXAR O MOD</h3>
+          <p>Na página oficial, escolha o arquivo .jar da mesma versão do Minecraft que você vai jogar.</p>
+          <div class="btns">
+            <a class="mc green" href="https://pixelmonmod.com/" target="_blank" rel="noopener">Site oficial</a>
+            <a class="mc amber" href="https://www.curseforge.com/minecraft/mc-mods/pixelmon" target="_blank"
+              rel="noopener">CurseForge</a>
+            <a class="mc blue" href="https://pixelmonmod.com/wiki/Pixelmon" target="_blank" rel="noopener">Wiki</a>
+          </div>
+        </div>
+        <div class="box">
+          <h3>COMO INSTALAR</h3>
+          <ol>
+            <li>Instale o Forge ou NeoForge da versão do Minecraft desejada.</li>
+            <li>Baixe o .jar do Pixelmon compatível com essa versão.</li>
+            <li>Coloque o arquivo na pasta <b>mods</b> do Minecraft.</li>
+            <li>Reserve pelo menos 2 GB de RAM e abra o jogo.</li>
+          </ol>
+        </div>
+        <div class="box">
+          <h3>VERSÕES SUPORTADAS</h3>
+          <ol>
+            <li>1.21.1 (NeoForge): desenvolvimento ativo</li>
+            <li>1.20.2 e 1.20.1 (Forge)</li>
+            <li>1.16.5 (Forge): estável</li>
+            <li>1.12.2 (Forge): legado</li>
+          </ol>
+          <p style="margin-top:.6rem">Versões listadas na wiki oficial. Confira a página de downloads para a lista
+            atual. O mod é para PC.</p>
+        </div>
       </div>
+    </section>
+  </main>
+
+  <footer>&copy; 2026 POKEX. Fã-site inspirado em Pixelmon. Pokémon é marca de Nintendo/Game Freak; dados e imagens via
+    PokéAPI.</footer>
+
+  <div id="flash"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="mbox"><button class="x" id="mx" aria-label="Fechar">X</button>
+      <div id="mbody"></div>
     </div>
-  </section>
-</main>
+  </div>
 
-<footer>&copy; 2026 POKEX. Fã-site inspirado em Pixelmon. Pokémon é marca de Nintendo/Game Freak; dados e imagens via PokéAPI.</footer>
+  <script>
+    const $ = s => document.querySelector(s);
+    /* ---------- cubos flutuantes ---------- */
+    ['#ef4444', '#fbbf24', '#38bdf8', '#4ade80', '#fb7185'].forEach((c, i) => { for (let k = 0; k < 3; k++) { const d = document.createElement('div'); d.className = 'cube'; const s = 14 + Math.random() * 26; d.style.cssText = `background:${c};width:${s}px;height:${s}px;left:${Math.random() * 96}%;top:${Math.random() * 92}%;--d:${5 + Math.random() * 8}s;animation-delay:-${Math.random() * 8}s`; document.body.appendChild(d) } });
 
-<div id="flash"></div>
-<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mbox"><button class="x" id="mx" aria-label="Fechar">X</button><div id="mbody"></div></div></div>
+    /* ---------- Pokébola voxel 3D ---------- */
+    const stage = $('#stage'), scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, .1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); stage.appendChild(renderer.domElement);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.enableZoom = false; controls.enablePan = false; controls.target.set(0, 1.8, 0);
+    scene.add(new THREE.AmbientLight(0xffffff, .8));
+    const dl = new THREE.DirectionalLight(0xffffff, .9); dl.position.set(15, 20, 15); scene.add(dl);
+    const bl = new THREE.DirectionalLight(0x38bdf8, .5); bl.position.set(-15, -10, -15); scene.add(bl);
+    const mRed = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: .3 }),
+      mWhite = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: .2 }),
+      mBlack = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: .6 }),
+      mBtn = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333, roughness: .1 });
+    const ball = new THREE.Group(); scene.add(ball);
+    const geo = new THREE.BoxGeometry(1, 1, 1), R = 8; let btn;
+    for (let x = -R; x <= R; x++)for (let y = -R; y <= R; y++)for (let z = -R; z <= R; z++) {
+      const d = x * x + y * y + z * z;
+      if (d > R * R + 1 || d < (R - 1) * (R - 1)) continue;
+      if (x === 0 && y === 0 && z === R) { btn = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.7, 1.7), mBtn); btn.position.set(0, 0, R + .3); ball.add(btn); continue }
+      let m = y > 0 ? mRed : mWhite;
+      if (y === 0 || (Math.abs(x) <= 1 && Math.abs(y) <= 1 && z >= R - 2)) m = mBlack;
+      const b = new THREE.Mesh(geo, m); b.position.set(x, y, z); ball.add(b);
+    }
+    function fit() {
+      const w = stage.clientWidth, h = stage.clientHeight;
+      camera.aspect = w / h; camera.position.set(0, 6, camera.aspect < 1 ? 32 / camera.aspect * .78 : 32);
+      camera.updateProjectionMatrix(); renderer.setSize(w, h);
+    }
+    addEventListener('resize', fit); fit();
 
-<script>
-const $=s=>document.querySelector(s);
-/* ---------- cubos flutuantes ---------- */
-['#ef4444','#fbbf24','#38bdf8','#4ade80','#fb7185'].forEach((c,i)=>{for(let k=0;k<3;k++){const d=document.createElement('div');d.className='cube';const s=14+Math.random()*26;d.style.cssText=`background:${c};width:${s}px;height:${s}px;left:${Math.random()*96}%;top:${Math.random()*92}%;--d:${5+Math.random()*8}s;animation-delay:-${Math.random()*8}s`;document.body.appendChild(d)}});
+    const ray = new THREE.Raycaster(), mv = new THREE.Vector2(); let hov = false, down = null, busy = false;
+    function hit(e) {
+      const r = renderer.domElement.getBoundingClientRect();
+      mv.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+      ray.setFromCamera(mv, camera); return ray.intersectObject(btn).length > 0;
+    }
+    const el = renderer.domElement;
+    el.addEventListener('pointermove', e => { const h = hit(e); if (h !== hov) { hov = h; el.style.cursor = h ? 'pointer' : ''; mBtn.emissive.setHex(h ? 0x888888 : 0x333333) } });
+    el.addEventListener('pointerdown', e => down = [e.clientX, e.clientY]);
+    el.addEventListener('pointerup', e => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 6 && hit(e)) capture(); down = null });
+    $('#catchBtn').onclick = () => capture();
 
-/* ---------- Pokébola voxel 3D ---------- */
-const stage=$('#stage'),scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(45,1,.1,1000);
-const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.appendChild(renderer.domElement);
-const controls=new THREE.OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;controls.enableZoom=false;controls.enablePan=false;controls.target.set(0,1.8,0);
-scene.add(new THREE.AmbientLight(0xffffff,.8));
-const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(15,20,15);scene.add(dl);
-const bl=new THREE.DirectionalLight(0x38bdf8,.5);bl.position.set(-15,-10,-15);scene.add(bl);
-const mRed=new THREE.MeshStandardMaterial({color:0xef4444,roughness:.3}),
-      mWhite=new THREE.MeshStandardMaterial({color:0xf8fafc,roughness:.2}),
-      mBlack=new THREE.MeshStandardMaterial({color:0x0f172a,roughness:.6}),
-      mBtn=new THREE.MeshStandardMaterial({color:0xffffff,emissive:0x333333,roughness:.1});
-const ball=new THREE.Group();scene.add(ball);
-const geo=new THREE.BoxGeometry(1,1,1),R=8;let btn;
-for(let x=-R;x<=R;x++)for(let y=-R;y<=R;y++)for(let z=-R;z<=R;z++){
-  const d=x*x+y*y+z*z;
-  if(d>R*R+1||d<(R-1)*(R-1))continue;
-  if(x===0&&y===0&&z===R){btn=new THREE.Mesh(new THREE.BoxGeometry(1.7,1.7,1.7),mBtn);btn.position.set(0,0,R+.3);ball.add(btn);continue}
-  let m=y>0?mRed:mWhite;
-  if(y===0||(Math.abs(x)<=1&&Math.abs(y)<=1&&z>=R-2))m=mBlack;
-  const b=new THREE.Mesh(geo,m);b.position.set(x,y,z);ball.add(b);
-}
-function fit(){
-  const w=stage.clientWidth,h=stage.clientHeight;
-  camera.aspect=w/h;camera.position.set(0,6,camera.aspect<1?32/camera.aspect*.78:32);
-  camera.updateProjectionMatrix();renderer.setSize(w,h);
-}
-addEventListener('resize',fit);fit();
+    function capture() {
+      if (busy) return; busy = true;
+      mBtn.emissive.setHex(0xf59e0b);
+      const t0 = performance.now();
+      (function f(n) { const e = (n - t0) / 700; if (e < 1) { ball.position.y = Math.sin(e * Math.PI) * 3; ball.rotation.y += .25; requestAnimationFrame(f) } else ball.position.y = 0 })(t0);
+      $('#flash').classList.remove('on'); void $('#flash').offsetWidth; $('#flash').classList.add('on');
+      setTimeout(() => { openPokemon(1 + Math.floor(Math.random() * 1025), true); busy = false; mBtn.emissive.setHex(0x333333) }, 650);
+    }
+    (function loop() {
+      requestAnimationFrame(loop); if (!hov && !busy) ball.rotation.y += .006;
+      btn.scale.setScalar(hov ? 1 + Math.sin(Date.now() * .008) * .08 : 1); controls.update(); renderer.render(scene, camera)
+    })();
 
-const ray=new THREE.Raycaster(),mv=new THREE.Vector2();let hov=false,down=null,busy=false;
-function hit(e){
-  const r=renderer.domElement.getBoundingClientRect();
-  mv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
-  ray.setFromCamera(mv,camera);return ray.intersectObject(btn).length>0;
-}
-const el=renderer.domElement;
-el.addEventListener('pointermove',e=>{const h=hit(e);if(h!==hov){hov=h;el.style.cursor=h?'pointer':'';mBtn.emissive.setHex(h?0x888888:0x333333)}});
-el.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
-el.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<6&&hit(e))capture();down=null});
-$('#catchBtn').onclick=()=>capture();
+    /* ---------- Pokédex (PokéAPI) ---------- */
+    const API = 'https://pokeapi.co/api/v2/', SP = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+    const TYPES = [['normal', 'Normal', '#a8a77a'], ['fire', 'Fogo', '#ee8130'], ['water', 'Água', '#6390f0'], ['electric', 'Elétrico', '#d9a900'], ['grass', 'Planta', '#4caf3a'], ['ice', 'Gelo', '#4fb8b8'], ['fighting', 'Lutador', '#c22e28'], ['poison', 'Veneno', '#a33ea1'], ['ground', 'Terra', '#c49a3a'], ['flying', 'Voador', '#7f6fd6'], ['psychic', 'Psíquico', '#f95587'], ['bug', 'Inseto', '#8aa010'], ['rock', 'Pedra', '#a38c21'], ['ghost', 'Fantasma', '#735797'], ['dragon', 'Dragão', '#6f35fc'], ['dark', 'Sombrio', '#705746'], ['steel', 'Aço', '#7a7aa0'], ['fairy', 'Fada', '#d685ad']];
+    const TC = Object.fromEntries(TYPES.map(t => [t[0], t[2]])), TN = Object.fromEntries(TYPES.map(t => [t[0], t[1]]));
+    const nm = s => s.replace(/-/g, ' '), badge = t => `<span class="tb" style="background:${TC[t]}">${TN[t]}</span>`;
+    let REL = {}, ALL = [], LIST = [], cur = 'all', q = '', shown = 0; const PAGE = 40;
 
-function capture(){
-  if(busy)return;busy=true;
-  mBtn.emissive.setHex(0xf59e0b);
-  const t0=performance.now();
-  (function f(n){const e=(n-t0)/700;if(e<1){ball.position.y=Math.sin(e*Math.PI)*3;ball.rotation.y+=.25;requestAnimationFrame(f)}else ball.position.y=0})(t0);
-  $('#flash').classList.remove('on');void $('#flash').offsetWidth;$('#flash').classList.add('on');
-  setTimeout(()=>{openPokemon(1+Math.floor(Math.random()*1025),true);busy=false;mBtn.emissive.setHex(0x333333)},650);
-}
-(function loop(){requestAnimationFrame(loop);if(!hov&&!busy)ball.rotation.y+=.006;
-  btn.scale.setScalar(hov?1+Math.sin(Date.now()*.008)*.08:1);controls.update();renderer.render(scene,camera)})();
+    const ready = Promise.all(TYPES.map(t => fetch(API + 'type/' + t[0]).then(r => r.json()))).then(res => {
+      const tmp = {};
+      res.forEach(d => { REL[d.name] = d.damage_relations; d.pokemon.forEach(p => { const id = +p.pokemon.url.split('/').filter(Boolean).pop(); if (id <= 1025) (tmp[id] = tmp[id] || { name: p.pokemon.name, t: [] }).t.push([p.slot, d.name]) }) });
+      ALL = Object.entries(tmp).map(([id, o]) => ({ id: +id, name: o.name, types: o.t.sort((a, b) => a[0] - b[0]).map(x => x[1]) })).sort((a, b) => a.id - b.id);
+      filter();
+    }).catch(() => { $('#grid').innerHTML = '<div class="msg">Não foi possível carregar a Pokédex. Verifique a conexão e recarregue a página.</div>' });
 
-/* ---------- Pokédex (PokéAPI) ---------- */
-const API='https://pokeapi.co/api/v2/',SP='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-const TYPES=[['normal','Normal','#a8a77a'],['fire','Fogo','#ee8130'],['water','Água','#6390f0'],['electric','Elétrico','#d9a900'],['grass','Planta','#4caf3a'],['ice','Gelo','#4fb8b8'],['fighting','Lutador','#c22e28'],['poison','Veneno','#a33ea1'],['ground','Terra','#c49a3a'],['flying','Voador','#7f6fd6'],['psychic','Psíquico','#f95587'],['bug','Inseto','#8aa010'],['rock','Pedra','#a38c21'],['ghost','Fantasma','#735797'],['dragon','Dragão','#6f35fc'],['dark','Sombrio','#705746'],['steel','Aço','#7a7aa0'],['fairy','Fada','#d685ad']];
-const TC=Object.fromEntries(TYPES.map(t=>[t[0],t[2]])),TN=Object.fromEntries(TYPES.map(t=>[t[0],t[1]]));
-const nm=s=>s.replace(/-/g,' '),badge=t=>`<span class="tb" style="background:${TC[t]}">${TN[t]}</span>`;
-let REL={},ALL=[],LIST=[],cur='all',q='',shown=0;const PAGE=40;
+    $('#tabs').innerHTML = `<button class="tab on" data-t="all" style="background:#475569">Todos</button>` + TYPES.map(t => `<button class="tab" data-t="${t[0]}" style="background:${t[2]}">${t[1]}</button>`).join('');
+    $('#tabs').onclick = e => { const b = e.target.closest('.tab'); if (!b) return; document.querySelectorAll('.tab').forEach(x => x.classList.remove('on')); b.classList.add('on'); cur = b.dataset.t; filter() };
+    $('#q').oninput = e => { q = e.target.value.trim().toLowerCase().replace('#', ''); filter() };
+    $('#more').onclick = more;
+    $('#grid').onclick = e => { const c = e.target.closest('[data-id]'); if (c) openPokemon(+c.dataset.id) };
 
-const ready=Promise.all(TYPES.map(t=>fetch(API+'type/'+t[0]).then(r=>r.json()))).then(res=>{
-  const tmp={};
-  res.forEach(d=>{REL[d.name]=d.damage_relations;d.pokemon.forEach(p=>{const id=+p.pokemon.url.split('/').filter(Boolean).pop();if(id<=1025)(tmp[id]=tmp[id]||{name:p.pokemon.name,t:[]}).t.push([p.slot,d.name])})});
-  ALL=Object.entries(tmp).map(([id,o])=>({id:+id,name:o.name,types:o.t.sort((a,b)=>a[0]-b[0]).map(x=>x[1])})).sort((a,b)=>a.id-b.id);
-  filter();
-}).catch(()=>{$('#grid').innerHTML='<div class="msg">Não foi possível carregar a Pokédex. Verifique a conexão e recarregue a página.</div>'});
+    function filter() {
+      LIST = ALL.filter(p => (cur === 'all' || p.types.includes(cur)) && (!q || p.name.includes(q) || String(p.id) === q));
+      shown = 0; $('#grid').innerHTML = '';
+      if (!LIST.length) $('#grid').innerHTML = '<div class="msg">Nenhum Pokémon encontrado.</div>';
+      more();
+    }
+    function more() {
+      const part = LIST.slice(shown, shown + PAGE);
+      $('#grid').insertAdjacentHTML('beforeend', part.map(p => `<div class="pc" data-id="${p.id}" tabindex="0"><img loading="lazy" src="${SP}${p.id}.png" alt="${p.name}"><small>#${String(p.id).padStart(4, '0')}</small><b>${nm(p.name)}</b>${p.types.map(badge).join('')}</div>`).join(''));
+      shown += part.length; $('#more').style.display = shown < LIST.length ? 'block' : 'none';
+      $('#count').textContent = LIST.length ? `${shown} de ${LIST.length} Pokémon` : '';
+    }
 
-$('#tabs').innerHTML=`<button class="tab on" data-t="all" style="background:#475569">Todos</button>`+TYPES.map(t=>`<button class="tab" data-t="${t[0]}" style="background:${t[2]}">${t[1]}</button>`).join('');
-$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=b.dataset.t;filter()};
-$('#q').oninput=e=>{q=e.target.value.trim().toLowerCase().replace('#','');filter()};
-$('#more').onclick=more;
-$('#grid').onclick=e=>{const c=e.target.closest('[data-id]');if(c)openPokemon(+c.dataset.id)};
+    /* ---------- Modal do Pokémon ---------- */
+    let tok = 0;
+    const modal = $('#modal');
+    const close = () => modal.classList.remove('on');
+    $('#mx').onclick = close; modal.onclick = e => { if (e.target === modal) close() };
+    addEventListener('keydown', e => { if (e.key === 'Escape') close() });
+    const SN = { hp: 'HP', 'attack': 'ATK', 'defense': 'DEF', 'special-attack': 'SATK', 'special-defense': 'SDEF', speed: 'SPD' };
 
-function filter(){
-  LIST=ALL.filter(p=>(cur==='all'||p.types.includes(cur))&&(!q||p.name.includes(q)||String(p.id)===q));
-  shown=0;$('#grid').innerHTML='';
-  if(!LIST.length)$('#grid').innerHTML='<div class="msg">Nenhum Pokémon encontrado.</div>';
-  more();
-}
-function more(){
-  const part=LIST.slice(shown,shown+PAGE);
-  $('#grid').insertAdjacentHTML('beforeend',part.map(p=>`<div class="pc" data-id="${p.id}" tabindex="0"><img loading="lazy" src="${SP}${p.id}.png" alt="${p.name}"><small>#${String(p.id).padStart(4,'0')}</small><b>${nm(p.name)}</b>${p.types.map(badge).join('')}</div>`).join(''));
-  shown+=part.length;$('#more').style.display=shown<LIST.length?'block':'none';
-  $('#count').textContent=LIST.length?`${shown} de ${LIST.length} Pokémon`:'';
-}
-
-/* ---------- Modal do Pokémon ---------- */
-let tok=0;
-const modal=$('#modal');
-const close=()=>modal.classList.remove('on');
-$('#mx').onclick=close;modal.onclick=e=>{if(e.target===modal)close()};
-addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-const SN={hp:'HP','attack':'ATK','defense':'DEF','special-attack':'SATK','special-defense':'SDEF',speed:'SPD'};
-
-async function openPokemon(id,captured){ 
-  const my=++tok;
-  modal.classList.add('on');$('#mbody').innerHTML='<div class="loading">CARREGANDO...</div>';
-  try{
-    await ready;
-    const [p,s]=await Promise.all([fetch(API+'pokemon/'+id).then(r=>r.json()),fetch(API+'pokemon-species/'+id).then(r=>r.json())]);
-    const ev=await fetch(s.evolution_chain.url).then(r=>r.json());
-    if(my!==tok)return;
-    const types=p.types.map(t=>t.type.name);
-    // fraquezas / resistências
-    const mult={};TYPES.forEach(t=>mult[t[0]]=1);
-    types.forEach(d=>{const r=REL[d];r.double_damage_from.forEach(x=>mult[x.name]*=2);r.half_damage_from.forEach(x=>mult[x.name]*=.5);r.no_damage_from.forEach(x=>mult[x.name]*=0)});
-    const weak=TYPES.map(t=>t[0]).filter(t=>mult[t]>1),res=TYPES.map(t=>t[0]).filter(t=>mult[t]<1&&mult[t]>0),imm=TYPES.map(t=>t[0]).filter(t=>mult[t]===0);
-    const strong=[...new Set(types.flatMap(d=>REL[d].double_damage_to.map(x=>x.name)))];
-    const chips=a=>a.length?a.map(t=>badge(t)+(mult[t]===4?'<b style="color:var(--amber)">x4</b>':'')).join(''):'<span style="color:var(--mute)">Nenhum</span>';
-    const en=s.flavor_text_entries.filter(e=>e.language.name==='en').pop(),gn=s.genera.find(g=>g.language.name==='en');
-    // evoluções
-    const sid=u=>+u.split('/').filter(Boolean).pop();
-    const node=n=>{const i=sid(n.species.url);return `<div class="n ${i===id?'cur':''}" data-id="${i}"><img src="${SP}${i}.png" alt=""><span>${nm(n.species.name)}</span></div>`};
-    const tree=n=>{
-      if(!n.evolves_to.length)return node(n);
-      const rows=n.evolves_to.map(c=>{const d=c.evolution_details[0]||{};const lb=d.min_level?'Nv '+d.min_level:d.item?nm(d.item.name):d.trigger?nm(d.trigger.name):'';return `<div class="rw"><span class="ar">&#9654;<br>${lb}</span>${tree(c)}</div>`}).join('');
-      return node(n)+`<div class="br">${rows}</div>`;
-    };
-    const evHTML=ev.chain.evolves_to.length?tree(ev.chain):'<span style="color:var(--mute)">Este Pokémon não evolui.</span>';
-    $('#mbody').innerHTML=`
-      <div class="hd"><div class="id">#${String(id).padStart(4,'0')}</div><h2>${nm(p.name)}</h2>
-      <img src="${p.sprites.other['official-artwork'].front_default||p.sprites.front_default}" alt="${p.name}">
-      <div>${types.map(badge).join('')}</div><div class="genus">${gn?gn.genus:''}</div></div>
-      ${en?`<p class="desc">${en.flavor_text.replace(/[\n\f]/g,' ')}</p>`:''}
-      <div class="info"><div><span>ALTURA</span>${p.height/10} m</div><div><span>PESO</span>${p.weight/10} kg</div><div><span>HABILIDADES</span>${p.abilities.map(a=>nm(a.ability.name)).join(', ')}</div></div>
+    async function openPokemon(id, captured) {
+      const my = ++tok;
+      modal.classList.add('on'); $('#mbody').innerHTML = '<div class="loading">CARREGANDO...</div>';
+      try {
+        await ready;
+        const [p, s] = await Promise.all([fetch(API + 'pokemon/' + id).then(r => r.json()), fetch(API + 'pokemon-species/' + id).then(r => r.json())]);
+        const ev = await fetch(s.evolution_chain.url).then(r => r.json());
+        if (my !== tok) return;
+        const types = p.types.map(t => t.type.name);
+        // fraquezas / resistências
+        const mult = {}; TYPES.forEach(t => mult[t[0]] = 1);
+        types.forEach(d => { const r = REL[d]; r.double_damage_from.forEach(x => mult[x.name] *= 2); r.half_damage_from.forEach(x => mult[x.name] *= .5); r.no_damage_from.forEach(x => mult[x.name] *= 0) });
+        const weak = TYPES.map(t => t[0]).filter(t => mult[t] > 1), res = TYPES.map(t => t[0]).filter(t => mult[t] < 1 && mult[t] > 0), imm = TYPES.map(t => t[0]).filter(t => mult[t] === 0);
+        const strong = [...new Set(types.flatMap(d => REL[d].double_damage_to.map(x => x.name)))];
+        const chips = a => a.length ? a.map(t => badge(t) + (mult[t] === 4 ? '<b style="color:var(--amber)">x4</b>' : '')).join('') : '<span style="color:var(--mute)">Nenhum</span>';
+        const en = s.flavor_text_entries.filter(e => e.language.name === 'en').pop(), gn = s.genera.find(g => g.language.name === 'en');
+        // evoluções
+        const sid = u => +u.split('/').filter(Boolean).pop();
+        const node = n => { const i = sid(n.species.url); return `<div class="n ${i === id ? 'cur' : ''}" data-id="${i}"><img src="${SP}${i}.png" alt=""><span>${nm(n.species.name)}</span></div>` };
+        const tree = n => {
+          if (!n.evolves_to.length) return node(n);
+          const rows = n.evolves_to.map(c => { const d = c.evolution_details[0] || {}; const lb = d.min_level ? 'Nv ' + d.min_level : d.item ? nm(d.item.name) : d.trigger ? nm(d.trigger.name) : ''; return `<div class="rw"><span class="ar">&#9654;<br>${lb}</span>${tree(c)}</div>` }).join('');
+          return node(n) + `<div class="br">${rows}</div>`;
+        };
+        const evHTML = ev.chain.evolves_to.length ? tree(ev.chain) : '<span style="color:var(--mute)">Este Pokémon não evolui.</span>';
+        $('#mbody').innerHTML = `
+      <div class="hd"><div class="id">#${String(id).padStart(4, '0')}</div><h2>${nm(p.name)}</h2>
+      <img src="${p.sprites.other['official-artwork'].front_default || p.sprites.front_default}" alt="${p.name}">
+      <div>${types.map(badge).join('')}</div><div class="genus">${gn ? gn.genus : ''}</div></div>
+      ${en ? `<p class="desc">${en.flavor_text.replace(/[\n\f]/g, ' ')}</p>` : ''}
+      <div class="info"><div><span>ALTURA</span>${p.height / 10} m</div><div><span>PESO</span>${p.weight / 10} kg</div><div><span>HABILIDADES</span>${p.abilities.map(a => nm(a.ability.name)).join(', ')}</div></div>
       <div class="mt">STATS</div>
-      ${p.stats.map(x=>`<div class="st"><i>${SN[x.stat.name]}</i><span>${x.base_stat}</span><div class="bar"><u data-w="${Math.min(100,x.base_stat/180*100)}" style="background:hsl(${Math.min(x.base_stat,160)/160*120},85%,50%)"></u></div></div>`).join('')}
+      ${p.stats.map(x => `<div class="st"><i>${SN[x.stat.name]}</i><span>${x.base_stat}</span><div class="bar"><u data-w="${Math.min(100, x.base_stat / 180 * 100)}" style="background:hsl(${Math.min(x.base_stat, 160) / 160 * 120},85%,50%)"></u></div></div>`).join('')}
       <div class="mt">FORTE CONTRA (ATAQUE)</div><div>${chips(strong)}</div>
       <div class="mt">FRACO CONTRA</div><div>${chips(weak)}</div>
       <div class="mt">RESISTE A</div><div>${chips(res)}</div>
-      ${imm.length?`<div class="mt">IMUNE A</div><div>${chips(imm)}</div>`:''}
+      ${imm.length ? `<div class="mt">IMUNE A</div><div>${chips(imm)}</div>` : ''}
       <div class="mt">EVOLUÇÕES</div><div class="evo" id="evo">${evHTML}</div>
-      ${captured?'<div style="text-align:center;margin-top:1.4rem"><button class="mc" id="again">Capturar outro</button></div>':''}`;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.bar u').forEach(u=>u.style.width=u.dataset.w+'%')));
-    $('#evo').onclick=e=>{const n=e.target.closest('[data-id]');if(n)openPokemon(+n.dataset.id)};
-    const ag=$('#again');if(ag)ag.onclick=()=>{close();capture()};
-  }catch(err){
-    if(my===tok)$('#mbody').innerHTML='<div class="msg">Não foi possível carregar este Pokémon. Verifique a conexão e tente de novo.</div>';
-  }
-}
-</script>
+      ${captured ? '<div style="text-align:center;margin-top:1.4rem"><button class="mc" id="again">Capturar outro</button></div>' : ''}`;
+        requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.bar u').forEach(u => u.style.width = u.dataset.w + '%')));
+        $('#evo').onclick = e => { const n = e.target.closest('[data-id]'); if (n) openPokemon(+n.dataset.id) };
+        const ag = $('#again'); if (ag) ag.onclick = () => { close(); capture() };
+      } catch (err) {
+        if (my === tok) $('#mbody').innerHTML = '<div class="msg">Não foi possível carregar este Pokémon. Verifique a conexão e tente de novo.</div>';
+      }
+    }
+  </script>
 </body>
+
 </html>
