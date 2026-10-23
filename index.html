@@ -123,38 +123,56 @@
     /* header */
 
     header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(11, 15, 25, 0.88);
-  backdrop-filter: blur(12px);
-  border-bottom: 4px solid #05070d;
-  box-shadow: 0 4px 0 #ff3366; /* Sua linha vermelha base */
-  padding: .7rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  
-  /* Efeito RGB que altera a cor da linha suavemente sem dar erro no CSS */
-  filter: drop-shadow(0 4px 0 #ff3366);
-  animation: rgbHue 6s linear infinite;
-}
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 4px solid #05070d;
+      box-shadow: 0 4px 0 #ff3366;
+      /* Sua linha vermelha base */
+      padding: .7rem 1.5rem;
+      /* menu no centro: marca | links | conta */
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
 
-/* Animação simplificada de rotação de cores */
-@keyframes rgbHue {
-  0%   { filter: hue-rotate(0deg); }     /* Cor original (Vermelho/Rosa) */
-  33%  { filter: hue-rotate(120deg); }   /* Transiciona para Azul/Ciano */
-  66%  { filter: hue-rotate(240deg); }   /* Transiciona para Verde */
-  100% { filter: hue-rotate(360deg); }   /* Volta para a cor original */
-}
+      /* Efeito RGB que altera a cor da linha suavemente sem dar erro no CSS */
+      filter: drop-shadow(0 4px 0 #ff3366);
+      animation: rgbHue 6s linear infinite;
+    }
+
+    /* Animação simplificada de rotação de cores */
+    @keyframes rgbHue {
+      0% {
+        filter: hue-rotate(0deg);
+      }
+
+      /* Cor original (Vermelho/Rosa) */
+      33% {
+        filter: hue-rotate(120deg);
+      }
+
+      /* Transiciona para Azul/Ciano */
+      66% {
+        filter: hue-rotate(240deg);
+      }
+
+      /* Transiciona para Verde */
+      100% {
+        filter: hue-rotate(360deg);
+      }
+
+      /* Volta para a cor original */
+    }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      text-decoration: none
+      text-decoration: none;
+      justify-self: start
     }
 
     #chz {
@@ -185,7 +203,8 @@
     nav {
       display: flex;
       gap: .6rem;
-      flex-wrap: wrap
+      flex-wrap: wrap;
+      justify-content: center
     }
 
     nav a {
@@ -202,6 +221,16 @@
       color: var(--amber);
       border-color: var(--line);
       background: var(--card)
+    }
+
+    .acct {
+      justify-self: end;
+      font-size: .55rem;
+      padding: .6rem .8rem;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
     }
 
     /* hero */
@@ -759,6 +788,412 @@
       font-size: .95rem
     }
 
+    /* ===== NOVO: lendários, time, itens, login, confete ===== */
+    .dark img {
+      filter: brightness(0) invert(.25)
+    }
+
+    .pc.dark img {
+      filter: brightness(0) invert(.25)
+    }
+
+    #lgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem
+    }
+
+    #lcount,
+    #tcount {
+      color: var(--mute);
+      font-weight: 700
+    }
+
+    .modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      align-items: center;
+      margin-bottom: 1rem
+    }
+
+    .mc.sel {
+      outline: 4px solid var(--amber)
+    }
+
+    #tmsg {
+      min-height: 1.6em;
+      color: var(--amber);
+      font-weight: 700;
+      margin-bottom: .8rem
+    }
+
+    #slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.6rem
+    }
+
+    .slot {
+      position: relative;
+      background: var(--card);
+      border: 4px solid #05070d;
+      box-shadow: inset 0 0 0 3px var(--line);
+      padding: .8rem .5rem;
+      text-align: center;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .25rem;
+      transition: .15s
+    }
+
+    .slot.empty {
+      border-style: dashed;
+      color: var(--mute)
+    }
+
+    .slot.empty .px {
+      font-size: 1.4rem;
+      color: var(--line)
+    }
+
+    .slot.over {
+      box-shadow: inset 0 0 0 3px var(--amber), 0 0 20px rgba(251, 191, 36, .4);
+      transform: scale(1.03)
+    }
+
+    .slot b {
+      text-transform: capitalize
+    }
+
+    .slot .sw {
+      position: relative;
+      width: 96px;
+      height: 96px
+    }
+
+    .slot .sp {
+      width: 96px;
+      height: 96px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .4))
+    }
+
+    .slot .ib {
+      position: absolute;
+      right: -14px;
+      bottom: -6px;
+      width: 38px;
+      height: 38px;
+      image-rendering: pixelated;
+      background: var(--bg);
+      border: 3px solid #05070d
+    }
+
+    .slot .rm {
+      position: absolute;
+      top: .3rem;
+      right: .3rem;
+      width: 26px;
+      height: 26px;
+      background: var(--red);
+      color: #fff;
+      border: 3px solid #05070d;
+      font: 700 .5rem 'Press Start 2P';
+      cursor: pointer
+    }
+
+    .slot .ri {
+      font: 700 .8rem 'Rajdhani', sans-serif;
+      color: var(--amber);
+      background: var(--bg);
+      border: 2px solid var(--line);
+      padding: .15rem .4rem;
+      cursor: pointer;
+      text-transform: capitalize
+    }
+
+    .slot small {
+      color: var(--mute);
+      font-weight: 700
+    }
+
+    .tcols {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.4rem;
+      align-items: start
+    }
+
+    .ttabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin: .8rem 0
+    }
+
+    .ttab {
+      border: 3px solid #05070d;
+      background: var(--card);
+      color: #fff;
+      font: 700 .85rem 'Rajdhani', sans-serif;
+      padding: .3rem .6rem;
+      cursor: pointer;
+      box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .35), inset 3px 3px 0 rgba(255, 255, 255, .2);
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, .5)
+    }
+
+    .ttab.on {
+      outline: 3px solid var(--amber)
+    }
+
+    .sin {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 3px solid var(--line);
+      padding: .6rem .8rem;
+      font: 700 1rem 'Rajdhani', sans-serif;
+      margin-top: .4rem
+    }
+
+    .sin:focus {
+      outline: 3px solid var(--amber)
+    }
+
+    #pbox {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: .8rem;
+      max-height: 560px;
+      overflow-y: auto;
+      padding: .3rem
+    }
+
+    #pbox .pc {
+      padding: .5rem .3rem;
+      user-select: none
+    }
+
+    #pbox .pc b {
+      font-size: .95rem
+    }
+
+    [data-drag] {
+      cursor: grab;
+      -webkit-user-drag: none
+    }
+
+    #igrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: .5rem;
+      max-height: 360px;
+      overflow-y: auto;
+      margin: .6rem 0;
+      padding: .2rem
+    }
+
+    .ic {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: var(--bg);
+      border: 3px solid var(--line);
+      padding: .4rem .2rem;
+      user-select: none;
+      font-weight: 700;
+      font-size: .8rem;
+      text-transform: capitalize;
+      color: var(--text);
+      line-height: 1.15
+    }
+
+    .ic img {
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated
+    }
+
+    .ic:hover {
+      border-color: var(--amber)
+    }
+
+    .ic.sel {
+      outline: 3px solid var(--amber);
+      background: var(--card2)
+    }
+
+    .idet {
+      display: flex;
+      gap: .8rem;
+      background: var(--bg);
+      border: 3px solid var(--line);
+      padding: .7rem;
+      margin-top: .8rem;
+      min-height: 110px;
+      color: var(--mute);
+      line-height: 1.4
+    }
+
+    .idet img {
+      width: 48px;
+      height: 48px;
+      image-rendering: pixelated;
+      flex: none
+    }
+
+    .idet b {
+      display: block;
+      color: #fff;
+      text-transform: capitalize
+    }
+
+    .idet small {
+      display: block;
+      color: var(--blue);
+      font-weight: 700;
+      margin-bottom: .3rem
+    }
+
+    .idet p {
+      color: #cbd5e1;
+      margin-bottom: .3rem
+    }
+
+    .idet .en {
+      color: var(--mute);
+      font-size: .9rem
+    }
+
+    #imore,
+    #tmore {
+      display: none;
+      margin: .8rem auto 0
+    }
+
+    .ghost {
+      position: fixed;
+      z-index: 2000;
+      width: 72px;
+      height: 72px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      image-rendering: pixelated;
+      filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .6))
+    }
+
+    /* login */
+    .af label {
+      display: block;
+      color: var(--mute);
+      font-weight: 700;
+      margin-top: .8rem
+    }
+
+    .af .err {
+      color: var(--rose);
+      font-weight: 700;
+      margin-top: .8rem;
+      min-height: 1.2em
+    }
+
+    .atabs {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      margin-bottom: .6rem
+    }
+
+    /* lendário capturado */
+    .legend {
+      font-family: 'Press Start 2P', cursive;
+      font-size: .8rem;
+      text-align: center;
+      margin-bottom: .8rem;
+      background: linear-gradient(90deg, #ff1744, #ffea00, #00e5ff, #76ff03, #ff4081, #ff1744);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rain 2s linear infinite
+    }
+
+    @keyframes rain {
+      to {
+        background-position: 300% 0
+      }
+    }
+
+    .newtag {
+      text-align: center;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: .4rem
+    }
+
+    .mbox.leg {
+      box-shadow: inset 0 0 0 4px var(--amber), 0 0 50px rgba(251, 191, 36, .6)
+    }
+
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1200;
+      pointer-events: none
+    }
+
+    .shake {
+      animation: shk .7s cubic-bezier(.36, .07, .19, .97)
+    }
+
+    @keyframes shk {
+
+      10%,
+      90% {
+        transform: translate(-2px, 0)
+      }
+
+      20%,
+      80% {
+        transform: translate(5px, -2px)
+      }
+
+      30%,
+      50%,
+      70% {
+        transform: translate(-9px, 3px)
+      }
+
+      40%,
+      60% {
+        transform: translate(9px, -3px)
+      }
+    }
+
+    @media(max-width:900px) {
+      header {
+        grid-template-columns: 1fr;
+        justify-items: center
+      }
+
+      .brand,
+      .acct {
+        justify-self: center
+      }
+
+      .tcols {
+        grid-template-columns: 1fr
+      }
+    }
+
     @media(max-width:600px) {
       header {
         justify-content: center
@@ -774,7 +1209,8 @@
         min-height: 520px
       }
 
-      #grid {
+      #grid,
+      #lgrid {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr))
       }
 
@@ -798,7 +1234,9 @@
     <a href="#inicio" class="brand"><img id="chz"
         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAZCAYAAABD2GxlAAADQUlEQVR4nM2Wv2obQRDGvz0bB1yocaEuYHApUhhXKQWjUo/gRu9gfPcAXmHII7jRIxyptHClK+PCqHTrwoUaFQEbrEmxO6u5vTslUhLIB6s76XZnf5p/t8D+4jD+qbI91zEAEFG833GtHltldiUDwAEsyjmn7bG6BxIIa21tbZ7nWzn+CNA5Bw3rnIsAYeMm0MW1v6G49VaGwz0Ao8e64EQRVqAATPrvuPvy6ZdgonoOOmY4TvMi/W5kqNB6kOC1PM9rcJP+exwAMHl6E7vdOTjzHBtAxzw+WafTGDNugxTjRnuTiCKkgApUqsnTmwZtwBVf/bUR4vHJGqVjBpm2EHAwAFxuHruruYe8HYGIkHpWK4RXa2MoeG08WKO9wTjm8eOHhJmttWyt1aHgYITb1hARwxcRA+DJ01scMX0ct4d25u0Uz8zFM8s+qkgcc3EKLFbBi+HnqqpkBltrgZcpKu8lhmM/d5mBbkdNb70etXoRjgEyjKRQBr0Mi5WkWaY+gxarNQa9DOX5AYgIVVVhOByCiGLSy2+t+yZtpyYyurV4SO3JS2Nu7v1tuciAS59ih8qAKR3zoOe/aogUSBcCEDx+NQdhFEEDQCoTPNepQS+L0QPSTCRjbs5Mo58BtVB7hfCminBkGvMRKj8ZXjNmXxyhSNraTEsPjHDz+bwWcvm3AFAuM9iHafS0fZjKH26CbpHYk+sGMPRA8Yh4S65z1Tbyi2u4q3nsb+UyA8g0Xm1yJaLfgww5uFitcXOPmIOZVK8Uh7UWw+EwwsnGo5HPr0n/HcUp0D8+wuuPTRMeP37U5mspyG2kbF+mKM8PIpxfELwncG0S2M/fvkcw3UKKU+DmzERQbSvPc+jDRdxXgQHe41VVyZz4/FCqtw1IPCmGi2MPdfd6hPCmYe+5DMWzN6GLTMOJSHpokHZKCucBAdkMeZ4zEcVkFzjZPGmiTEQ+JI8fGPSy6EUtnS7yGmzrlV3nws73LTPDGFNrJ+UyVFfwXnrcknXT6bR2opE/K/Pa1nWwbE/a+FxSoHmA6IQ0xnQC7sCw14k6Vb13hia9BW6nPfc6USeqbxheZY03z38oZvZHsOTItpP+Roi3SUPttddPGhYCYNfcq4oAAAAASUVORK5CYII="
         alt="Mega Charizard X em pixel art"><b>POKEX</b></a>
-    <nav><a href="#inicio">Início</a><a href="#pokedex">Pokédex</a><a href="#pixelmon">Pixelmon</a></nav>
+    <nav><a href="#inicio">Início</a><a href="#pokedex">Pokédex</a><a href="#lendarios">Lendários</a><a
+        href="#time">Time</a><a href="#pixelmon">Pixelmon</a></nav>
+    <button class="mc blue acct" id="acct">Entrar</button>
   </header>
 
   <main>
@@ -842,6 +1280,58 @@
         <div class="msg loading">CARREGANDO POKÉDEX...</div>
       </div>
       <button class="mc blue" id="more">Carregar mais</button>
+    </section>
+    <div class="grass"></div>
+
+    <section class="sec" id="lendarios">
+      <h2>LENDÁRIOS</h2>
+      <p class="sub">Os Pokémon lendários e míticos ficam em silhueta até você capturá-los na Pokébola. Ao capturar o
+        primeiro, a Master Ball roxa entra no rodízio de cores da Pokébola, com direito a confete.</p>
+      <div class="tools"><span id="lcount"></span></div>
+      <p class="sub" id="lmsg" style="min-height:1.5em;margin-bottom:1rem;color:var(--amber)"></p>
+      <div id="lgrid">
+        <div class="msg loading">CARREGANDO LENDÁRIOS...</div>
+      </div>
+    </section>
+    <div class="grass"></div>
+
+    <section class="sec" id="time">
+      <h2>TIME</h2>
+      <p class="sub">Monte um time de 6 Pokémon e equipe itens neles. Arraste com o mouse, ou toque em um Pokémon para
+        adicioná-lo e toque em um item e depois no Pokémon do time para equipar.</p>
+      <div class="modes">
+        <button class="mc green" id="mSurv">Sobrevivência</button>
+        <button class="mc amber" id="mCre">Criativo</button>
+      </div>
+      <p class="sub" id="mtext" style="margin-bottom:.8rem"></p>
+      <p id="tmsg" aria-live="polite"></p>
+      <div id="slots"></div>
+      <div class="tcols">
+        <div class="box">
+          <h3>CAIXA DE POKÉMON</h3>
+          <span id="tcount"></span>
+          <input class="sin" id="tq" type="search" placeholder="Buscar por nome ou número..."
+            aria-label="Buscar na caixa">
+          <div class="ttabs" id="ttabs"></div>
+          <div id="pbox">
+            <div class="msg loading">CARREGANDO...</div>
+          </div>
+          <button class="mc blue" id="tmore">Carregar mais</button>
+        </div>
+        <div class="box">
+          <h3>ITENS</h3>
+          <input class="sin" id="iq" type="search" placeholder="Buscar item..." aria-label="Buscar item">
+          <select class="sin" id="icat" aria-label="Categoria de item">
+            <option value="all">Carregando categorias...</option>
+          </select>
+          <div class="idet" id="idet">Passe o mouse ou toque em um item para ver o que ele faz.</div>
+          <div id="igrid">
+            <div class="msg loading">CARREGANDO ITENS...</div>
+          </div>
+          <span id="icount" style="color:var(--mute);font-weight:700"></span>
+          <button class="mc blue" id="imore">Mostrar mais</button>
+        </div>
+      </div>
     </section>
     <div class="grass"></div>
 
@@ -893,11 +1383,58 @@
       <div id="mbody"></div>
     </div>
   </div>
+  <div class="modal" id="auth" role="dialog" aria-modal="true">
+    <div class="mbox" style="max-width:420px"><button class="x" id="ax" aria-label="Fechar">X</button>
+      <div id="abody"></div>
+    </div>
+  </div>
 
   <script>
     const $ = s => document.querySelector(s);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     /* ---------- cubos flutuantes ---------- */
     ['#ef4444', '#fbbf24', '#38bdf8', '#4ade80', '#fb7185'].forEach((c, i) => { for (let k = 0; k < 3; k++) { const d = document.createElement('div'); d.className = 'cube'; const s = 14 + Math.random() * 26; d.style.cssText = `background:${c};width:${s}px;height:${s}px;left:${Math.random() * 96}%;top:${Math.random() * 92}%;--d:${5 + Math.random() * 8}s;animation-delay:-${Math.random() * 8}s`; document.body.appendChild(d) } });
+
+    /* ---------- Lendários e míticos (IDs da Pokédex nacional) ---------- */
+    const LEG = new Set([144, 145, 146, 150, 151, 243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 480, 481, 482, 483, 484, 485, 486, 487, 488, 490, 491, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 716, 717, 718, 719, 720, 721, 772, 773, 785, 786, 787, 788, 789, 790, 791, 792, 800, 801, 802, 807, 808, 809, 888, 889, 890, 891, 892, 893, 894, 895, 896, 897, 898, 905, 1001, 1002, 1003, 1004, 1007, 1008, 1014, 1015, 1016, 1017, 1024, 1025]);
+    const MYTH = new Set([151, 251, 385, 386, 490, 491, 492, 493, 494, 647, 648, 649, 719, 720, 721, 801, 802, 807, 808, 809, 893, 1025]);
+
+    /* ---------- Dados do usuário (login local + convidado) ---------- */
+    const LSK = 'pokex_v1';
+    const blank = () => ({ caught: [], team: { survival: Array(6).fill(null), creative: Array(6).fill(null) }, mode: 'survival' });
+    function norm(d) {
+      d = d && typeof d === 'object' ? d : blank();
+      d.caught = Array.isArray(d.caught) ? d.caught.filter(n => Number.isInteger(n)) : [];
+      d.team = d.team && typeof d.team === 'object' ? d.team : {};
+      ['survival', 'creative'].forEach(k => { const a = Array.isArray(d.team[k]) ? d.team[k] : []; d.team[k] = Array.from({ length: 6 }, (_, i) => a[i] && a[i].id ? { id: a[i].id, item: a[i].item || null } : null) });
+      if (d.mode !== 'creative') d.mode = 'survival';
+      return d;
+    }
+    let DB = null;
+    try { DB = JSON.parse(localStorage.getItem(LSK)) } catch (e) { DB = null }
+    if (!DB || typeof DB !== 'object') DB = { users: {}, guest: blank(), session: null };
+    DB.users = DB.users && typeof DB.users === 'object' ? DB.users : {};
+    Object.values(DB.users).forEach(u => u.data = norm(u.data));
+    DB.guest = norm(DB.guest);
+    if (DB.session && !DB.users[DB.session]) DB.session = null;
+    function save() { try { localStorage.setItem(LSK, JSON.stringify(DB)) } catch (e) { } }
+    const me = () => DB.session ? DB.users[DB.session].data : DB.guest;
+    let CAUGHT = new Set(me().caught);
+    const hasLegend = () => [...CAUGHT].some(id => LEG.has(id));
+    function addCaught(id) {
+      if (CAUGHT.has(id)) return false;
+      CAUGHT.add(id); me().caught.push(id); save(); return true;
+    }
+    async function hashPw(pw, salt) {
+      try {
+        const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(salt + ':' + pw));
+        return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+      } catch (e) {
+        let h = 5381; const s = salt + ':' + pw;
+        for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+        return 'f' + h;
+      }
+    }
 
     /* ---------- Pokébola voxel 3D ---------- */
     const stage = $('#stage'), scene = new THREE.Scene();
@@ -910,6 +1447,8 @@
     const dl = new THREE.DirectionalLight(0xffffff, .9); dl.position.set(15, 20, 15); scene.add(dl);
     const bl = new THREE.DirectionalLight(0x38bdf8, .5); bl.position.set(-15, -10, -15); scene.add(bl);
     const mRed = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: .3 }),
+      mEar = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: .3 }),
+      mStripe = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: .3 }),
       mWhite = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: .2 }),
       mBlack = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: .6 }),
       mBtn = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333333, roughness: .1 });
@@ -920,9 +1459,31 @@
       if (d > R * R + 1 || d < (R - 1) * (R - 1)) continue;
       if (x === 0 && y === 0 && z === R) { btn = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.7, 1.7), mBtn); btn.position.set(0, 0, R + .3); ball.add(btn); continue }
       let m = y > 0 ? mRed : mWhite;
+      if (y > 0) { const ax = Math.abs(x); if (y >= 3 && ax >= 5 && ax <= 7 && z >= -1) m = mEar; else if (ax >= 2 && ax <= 4) m = mStripe }
       if (y === 0 || (Math.abs(x) <= 1 && Math.abs(y) <= 1 && z >= R - 2)) m = mBlack;
       const b = new THREE.Mesh(geo, m); b.position.set(x, y, z); ball.add(b);
     }
+
+    /* cores da bola: troca suave a cada 1 minuto (só as cores, o 3D não muda) */
+    const BALLS = {
+      poke: { top: 0xef4444, ear: 0xef4444, str: 0xef4444 },
+      great: { top: 0x2563eb, ear: 0xef4444, str: 0x2563eb },
+      ultra: { top: 0x1f2937, ear: 0x1f2937, str: 0xfbbf24 },
+      master: { top: 0x9333ea, ear: 0xec4899, str: 0x9333ea }
+    };
+    const tgt = { top: new THREE.Color(0xef4444), ear: new THREE.Color(0xef4444), str: new THREE.Color(0xef4444) };
+    let ballKey = 'poke', ci = 0, ballTimer = null;
+    const cycle = () => hasLegend() ? ['poke', 'great', 'ultra', 'master'] : ['poke', 'great', 'ultra'];
+    function setBall(k) { ballKey = k; const b = BALLS[k]; tgt.top.setHex(b.top); tgt.ear.setHex(b.ear); tgt.str.setHex(b.str) }
+    function nextBall() { const c = cycle(); ci = (ci + 1) % c.length; setBall(c[ci]) }
+    function startBallTimer() { clearInterval(ballTimer); ballTimer = setInterval(nextBall, 60000) }
+    function showMaster() { setBall('master'); ci = cycle().indexOf('master'); startBallTimer() }
+    function fixBall() {
+      if (ballKey === 'master' && !hasLegend()) { ci = 0; setBall('poke'); startBallTimer() }
+      else ci = Math.min(ci, cycle().length - 1);
+    }
+    startBallTimer();
+
     function fit() {
       const w = stage.clientWidth, h = stage.clientHeight;
       camera.aspect = w / h; camera.position.set(0, 6, camera.aspect < 1 ? 32 / camera.aspect * .78 : 32);
@@ -944,14 +1505,21 @@
 
     function capture() {
       if (busy) return; busy = true;
+      const id = 1 + Math.floor(Math.random() * 1025);
+      const isNew = addCaught(id), leg = LEG.has(id);
       mBtn.emissive.setHex(0xf59e0b);
       const t0 = performance.now();
       (function f(n) { const e = (n - t0) / 700; if (e < 1) { ball.position.y = Math.sin(e * Math.PI) * 3; ball.rotation.y += .25; requestAnimationFrame(f) } else ball.position.y = 0 })(t0);
       $('#flash').classList.remove('on'); void $('#flash').offsetWidth; $('#flash').classList.add('on');
-      setTimeout(() => { openPokemon(1 + Math.floor(Math.random() * 1025), true); busy = false; mBtn.emissive.setHex(0x333333) }, 650);
+      setTimeout(() => {
+        if (leg) showMaster();
+        if (isNew) { renderLegends(); tFilter() }
+        openPokemon(id, true, { isNew, leg }); busy = false; mBtn.emissive.setHex(0x333333)
+      }, 650);
     }
     (function loop() {
       requestAnimationFrame(loop); if (!hov && !busy) ball.rotation.y += .006;
+      mRed.color.lerp(tgt.top, .05); mEar.color.lerp(tgt.ear, .05); mStripe.color.lerp(tgt.str, .05);
       btn.scale.setScalar(hov ? 1 + Math.sin(Date.now() * .008) * .08 : 1); controls.update(); renderer.render(scene, camera)
     })();
 
@@ -993,11 +1561,12 @@
     const modal = $('#modal');
     const close = () => modal.classList.remove('on');
     $('#mx').onclick = close; modal.onclick = e => { if (e.target === modal) close() };
-    addEventListener('keydown', e => { if (e.key === 'Escape') close() });
+    addEventListener('keydown', e => { if (e.key === 'Escape') { close(); closeAuth() } });
     const SN = { hp: 'HP', 'attack': 'ATK', 'defense': 'DEF', 'special-attack': 'SATK', 'special-defense': 'SDEF', speed: 'SPD' };
 
-    async function openPokemon(id, captured) {
+    async function openPokemon(id, captured, info) {
       const my = ++tok;
+      const mb = $('#modal .mbox'); mb.classList.remove('leg');
       modal.classList.add('on'); $('#mbody').innerHTML = '<div class="loading">CARREGANDO...</div>';
       try {
         await ready;
@@ -1022,6 +1591,8 @@
         };
         const evHTML = ev.chain.evolves_to.length ? tree(ev.chain) : '<span style="color:var(--mute)">Este Pokémon não evolui.</span>';
         $('#mbody').innerHTML = `
+      ${info && info.leg ? `<div class="legend">${MYTH.has(id) ? 'MÍTICO' : 'LENDÁRIO'} CAPTURADO!</div>` : ''}
+      ${info && info.isNew ? '<div class="newtag">Novo registro na sua coleção</div>' : ''}
       <div class="hd"><div class="id">#${String(id).padStart(4, '0')}</div><h2>${nm(p.name)}</h2>
       <img src="${p.sprites.other['official-artwork'].front_default || p.sprites.front_default}" alt="${p.name}">
       <div>${types.map(badge).join('')}</div><div class="genus">${gn ? gn.genus : ''}</div></div>
@@ -1038,10 +1609,276 @@
         requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.bar u').forEach(u => u.style.width = u.dataset.w + '%')));
         $('#evo').onclick = e => { const n = e.target.closest('[data-id]'); if (n) openPokemon(+n.dataset.id) };
         const ag = $('#again'); if (ag) ag.onclick = () => { close(); capture() };
+        if (info && info.leg) { mb.classList.add('leg'); confetti() }
       } catch (err) {
         if (my === tok) $('#mbody').innerHTML = '<div class="msg">Não foi possível carregar este Pokémon. Verifique a conexão e tente de novo.</div>';
       }
     }
+
+    /* ---------- Confete (lendário capturado) ---------- */
+    const cf = document.createElement('canvas'); cf.id = 'confetti'; document.body.appendChild(cf);
+    const cx = cf.getContext('2d'); let parts = [], cfRun = false;
+    function cfSize() { cf.width = innerWidth; cf.height = innerHeight }
+    addEventListener('resize', cfSize); cfSize();
+    const CFC = ['#ff1744', '#ffea00', '#00e5ff', '#76ff03', '#ff4081', '#7c4dff', '#ff9100', '#1de9b6', '#ffffff'];
+    function burst(x, y, ang, n, spread, pw) {
+      for (let i = 0; i < n; i++) {
+        const a = ang + (Math.random() - .5) * spread, v = pw * (.45 + Math.random() * .75);
+        parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, w: 6 + Math.random() * 8, h: 4 + Math.random() * 7, r: Math.random() * 6.28, vr: (Math.random() - .5) * .4, c: CFC[Math.random() * CFC.length | 0], t: 0, life: 170 + Math.random() * 110, fl: Math.random() * 6.28 });
+      }
+      if (!cfRun) { cfRun = true; requestAnimationFrame(cfLoop) }
+    }
+    function shake() {
+      document.querySelectorAll('#modal .mbox,#stage').forEach(e => { e.classList.remove('shake'); void e.offsetWidth; e.classList.add('shake') });
+    }
+    function confetti() {
+      const k = matchMedia('(prefers-reduced-motion:reduce)').matches ? .3 : 1, w = cf.width, h = cf.height;
+      burst(0, h, -Math.PI / 3, (130 * k) | 0, .7, 30);
+      burst(w, h, -Math.PI * 2 / 3, (130 * k) | 0, .7, 30);
+      shake();
+      setTimeout(() => burst(w * .5, h * .35, -Math.PI / 2, (110 * k) | 0, Math.PI * 2, 22), 350);
+      setTimeout(() => { burst(0, h, -Math.PI / 3, (70 * k) | 0, .6, 34); burst(w, h, -Math.PI * 2 / 3, (70 * k) | 0, .6, 34) }, 700);
+    }
+    function cfLoop() {
+      cx.clearRect(0, 0, cf.width, cf.height);
+      parts = parts.filter(p => p.t < p.life && p.y < cf.height + 40);
+      parts.forEach(p => {
+        p.vx *= .985; p.vy = p.vy * .985 + .42; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.fl += .18; p.t++;
+        cx.save(); cx.globalAlpha = 1 - Math.max(0, (p.t - p.life * .7) / (p.life * .3));
+        cx.translate(p.x, p.y); cx.rotate(p.r); cx.scale(1, Math.cos(p.fl));
+        cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore();
+      });
+      if (parts.length) requestAnimationFrame(cfLoop); else { cfRun = false; cx.clearRect(0, 0, cf.width, cf.height) }
+    }
+
+    /* ---------- Seção Lendários ---------- */
+    const BYID = {};
+    function renderLegends() {
+      if (!ALL.length) return;
+      const L = ALL.filter(p => LEG.has(p.id)), got = L.filter(p => CAUGHT.has(p.id)).length;
+      $('#lgrid').innerHTML = L.map(p => {
+        const k = CAUGHT.has(p.id), my = MYTH.has(p.id);
+        return `<div class="pc ${k ? '' : 'dark'}" data-lid="${p.id}" tabindex="0"><img loading="lazy" src="${SP}${p.id}.png" alt="${k ? p.name : 'Pokémon desconhecido'}"><small>#${String(p.id).padStart(4, '0')}</small><b>${k ? nm(p.name) : '???'}</b>${k ? p.types.map(badge).join('') : ''}<span class="tb" style="background:${my ? '#ec4899' : '#d97706'}">${my ? 'Mítico' : 'Lendário'}</span></div>`;
+      }).join('');
+      $('#lcount').textContent = `${got} de ${L.length} capturados`;
+    }
+    $('#lgrid').onclick = e => {
+      const c = e.target.closest('[data-lid]'); if (!c) return; const id = +c.dataset.lid;
+      if (CAUGHT.has(id)) { $('#lmsg').textContent = ''; openPokemon(id) }
+      else $('#lmsg').textContent = 'Ainda não capturado. Acerte o botão da Pokébola até esse Pokémon aparecer.';
+    };
+
+    /* ---------- Aba TIME ---------- */
+    const IS = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+    const teamArr = () => me().team[me().mode];
+    let selItem = null, suppress = false;
+    function say(m) { $('#tmsg').textContent = m || '' }
+    function commit() { save(); renderSlots() }
+
+    function modeUI() {
+      const s = me().mode === 'survival';
+      $('#mSurv').classList.toggle('sel', s); $('#mCre').classList.toggle('sel', !s);
+      $('#mtext').textContent = s ? 'Sobrevivência: só vale Pokémon que você já capturou na Pokébola.' : 'Criativo: use qualquer Pokémon, até os que você ainda não capturou, só para testar o time.';
+    }
+    $('#mSurv').onclick = () => { me().mode = 'survival'; save(); say(''); modeUI(); renderSlots(); tFilter() };
+    $('#mCre').onclick = () => { me().mode = 'creative'; save(); say(''); modeUI(); renderSlots(); tFilter() };
+
+    function renderSlots() {
+      const t = teamArr();
+      $('#slots').innerHTML = t.map((s, i) => {
+        const p = s && BYID[s.id];
+        if (!s) return `<div class="slot empty" data-slot="${i}" tabindex="0"><span class="px">${i + 1}</span><small>Arraste ou toque em um Pokémon da caixa</small></div>`;
+        return `<div class="slot" data-slot="${i}" tabindex="0"><button class="rm" data-rm="${i}" aria-label="Remover do time">X</button><div class="sw"><img class="sp" src="${SP}${s.id}.png" alt="">${s.item ? `<img class="ib" src="${IS}${esc(s.item)}.png" alt="${esc(nm(s.item))}" title="${esc(nm(s.item))}" onerror="this.style.visibility='hidden'">` : ''}</div><b>${p ? nm(p.name) : '#' + s.id}</b><div>${p ? p.types.map(badge).join('') : ''}</div>${s.item ? `<button class="ri" data-ri="${i}" title="Tirar item">${esc(nm(s.item))} &#10005;</button>` : '<small>Sem item</small>'}</div>`;
+      }).join('');
+    }
+
+    function addPoke(id, i) {
+      const t = teamArr();
+      if (me().mode === 'survival' && !CAUGHT.has(id)) return say('Modo Sobrevivência: capture este Pokémon na Pokébola primeiro.');
+      if (t.some((s, j) => s && s.id === id && j !== i)) return say('Esse Pokémon já está no time.');
+      if (i == null) { i = t.findIndex(s => !s); if (i < 0) return say('Time cheio. Remova um Pokémon ou solte o novo em cima de um slot.') }
+      const prev = t[i]; t[i] = { id, item: prev ? prev.item : null }; say(''); commit();
+    }
+    function equip(slug, i) {
+      const t = teamArr();
+      if (!t[i]) return say('Coloque um Pokémon nesse slot antes de equipar um item.');
+      t[i].item = slug; const p = BYID[t[i].id]; say(`${nm(slug)} equipado em ${p ? nm(p.name) : '#' + t[i].id}.`); commit();
+    }
+    function dropOn(k, i) { const kind = k.slice(0, 1), val = k.slice(2); if (kind === 'p') addPoke(+val, i); else equip(val, i) }
+
+    /* arrastar e soltar com ponteiro (mouse/caneta); no toque use os toques */
+    let drag = null, ghost = null;
+    const slotAt = e => { const x = document.elementFromPoint(e.clientX, e.clientY); return x && x.closest ? x.closest('.slot') : null };
+    const clearOver = () => document.querySelectorAll('.slot.over').forEach(s => s.classList.remove('over'));
+    document.addEventListener('dragstart', e => { if (e.target.closest && e.target.closest('[data-drag]')) e.preventDefault() });
+    document.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      const s = e.target.closest && e.target.closest('[data-drag]'); if (!s) return;
+      drag = { k: s.dataset.drag, x: e.clientX, y: e.clientY, src: s, on: false };
+    });
+    document.addEventListener('pointermove', e => {
+      if (!drag) return;
+      if (!drag.on) {
+        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+        drag.on = true; ghost = document.createElement('img'); ghost.className = 'ghost'; ghost.alt = '';
+        const im = drag.src.querySelector('img'); ghost.src = im ? im.src : ''; document.body.appendChild(ghost);
+      }
+      ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
+      clearOver(); const sl = slotAt(e); if (sl) sl.classList.add('over');
+    });
+    document.addEventListener('pointerup', e => {
+      if (!drag) return; const d = drag; drag = null;
+      if (d.on) {
+        ghost.remove(); ghost = null; clearOver();
+        const sl = slotAt(e); if (sl) dropOn(d.k, +sl.dataset.slot);
+        suppress = true; setTimeout(() => suppress = false, 0);
+      }
+    });
+
+    $('#slots').onclick = e => {
+      if (suppress) return;
+      const rm = e.target.closest('[data-rm]'); if (rm) { teamArr()[+rm.dataset.rm] = null; say(''); commit(); return }
+      const ri = e.target.closest('[data-ri]'); if (ri) { const s = teamArr()[+ri.dataset.ri]; if (s) { s.item = null; commit() } return }
+      const sl = e.target.closest('.slot'); if (sl && selItem) equip(selItem, +sl.dataset.slot);
+    };
+
+    /* caixa de Pokémon (capturados em cor, os demais escuros) */
+    let tType = 'all', tQ = '', tList = [], tShown = 0; const TPAGE = 60;
+    $('#ttabs').innerHTML = `<button class="ttab on" data-t="all" style="background:#475569">Todos</button><button class="ttab" data-t="caught" style="background:#16a34a">Capturados</button>` + TYPES.map(t => `<button class="ttab" data-t="${t[0]}" style="background:${t[2]}">${t[1]}</button>`).join('');
+    $('#ttabs').onclick = e => { const b = e.target.closest('.ttab'); if (!b) return; document.querySelectorAll('.ttab').forEach(x => x.classList.remove('on')); b.classList.add('on'); tType = b.dataset.t; tFilter() };
+    $('#tq').oninput = e => { tQ = e.target.value.trim().toLowerCase().replace('#', ''); tFilter() };
+    $('#tmore').onclick = tMore;
+    $('#pbox').onclick = e => { if (suppress) return; const c = e.target.closest('[data-pid]'); if (c) addPoke(+c.dataset.pid) };
+    function tFilter() {
+      $('#tcount').textContent = `${CAUGHT.size} de ${ALL.length || 1025} capturados`;
+      if (!ALL.length) return;
+      tList = ALL.filter(p => (tType === 'all' || (tType === 'caught' ? CAUGHT.has(p.id) : p.types.includes(tType))) && (!tQ || p.name.includes(tQ) || String(p.id) === tQ));
+      tShown = 0; $('#pbox').innerHTML = '';
+      if (!tList.length) $('#pbox').innerHTML = `<div class="msg">${tType === 'caught' ? 'Você ainda não capturou nenhum Pokémon. Use a Pokébola lá em cima.' : 'Nenhum Pokémon encontrado.'}</div>`;
+      tMore();
+    }
+    function tMore() {
+      const part = tList.slice(tShown, tShown + TPAGE), surv = me().mode === 'survival';
+      $('#pbox').insertAdjacentHTML('beforeend', part.map(p => {
+        const k = CAUGHT.has(p.id), hide = !k && surv;
+        return `<div class="pc ${k ? '' : 'dark'}" data-pid="${p.id}" data-drag="p:${p.id}" tabindex="0"><img loading="lazy" src="${SP}${p.id}.png" alt=""><small>#${String(p.id).padStart(4, '0')}</small><b>${hide ? '???' : nm(p.name)}</b>${hide ? '' : p.types.map(badge).join('')}</div>`;
+      }).join(''));
+      tShown += part.length; $('#tmore').style.display = tShown < tList.length ? 'block' : 'none';
+    }
+
+    /* itens da franquia (PokéAPI) com explicação */
+    const CATPT = { 'stat-boosts': 'Bônus de status', 'effort-drop': 'Reduz EVs', 'medicine': 'Remédios', 'other': 'Outros', 'in-a-pinch': 'Bagas de emergência', 'picky-healing': 'Bagas de cura', 'type-protection': 'Bagas de proteção', 'baking-only': 'Para culinária', 'collectibles': 'Colecionáveis', 'evolution': 'Evolução', 'spelunking': 'Exploração', 'held-items': 'Itens seguráveis', 'choice': 'Itens Choice', 'effort-training': 'Treino de EVs', 'bad-held-items': 'Itens prejudiciais', 'training': 'Treinamento', 'plates': 'Placas', 'species-specific': 'Específicos de espécie', 'type-enhancement': 'Melhora de tipo', 'event-items': 'Itens de evento', 'gameplay': 'Jogabilidade', 'plot-advancement': 'Itens de história', 'unused': 'Não usados', 'loot': 'Tesouros', 'all-mail': 'Cartas', 'vitamins': 'Vitaminas', 'healing': 'Cura', 'pp-recovery': 'Recupera PP', 'revival': 'Reviver', 'status-cures': 'Cura de status', 'mulch': 'Adubo', 'special-balls': 'Balls especiais', 'standard-balls': 'Poké Balls comuns', 'dex-completion': 'Completar Pokédex', 'scarves': 'Lenços', 'all-machines': 'TMs e HMs', 'flutes': 'Flautas', 'apricorn-balls': 'Balls de Apricorn', 'apricorn-box': 'Caixa de Apricorn', 'data-cards': 'Cartões de dados', 'jewels': 'Joias', 'miracle-shooter': 'Miracle Shooter', 'mega-stones': 'Mega Pedras', 'memories': 'Memórias', 'z-crystals': 'Cristais Z', 'species-candies': 'Doces de espécie', 'catching-bonus': 'Bônus de captura', 'dynamax-crystals': 'Cristais Dynamax', 'nature-mints': 'Mentas de natureza', 'curry-ingredients': 'Ingredientes de curry', 'tera-shard': 'Fragmentos Tera', 'sandwich-ingredients': 'Ingredientes de sanduíche', 'tm-materials': 'Materiais de TM', 'picnic': 'Piquenique' };
+    const CATDESC = { 'held-items': 'Item que o Pokémon segura na batalha, com efeito passivo ou que ativa em certas condições.', 'choice': 'Aumenta um status em 50%, mas trava o Pokémon no primeiro golpe usado.', 'type-enhancement': 'Aumenta o dano dos golpes de um tipo específico.', 'plates': 'Aumenta o dano de um tipo e define o tipo do golpe Judgment de Arceus.', 'mega-stones': 'Permite a Mega Evolução de um Pokémon específico durante a batalha.', 'z-crystals': 'Permite usar um Golpe Z poderoso uma vez por batalha.', 'standard-balls': 'Bola de captura comum.', 'special-balls': 'Bola de captura com bônus em situações específicas.', 'healing': 'Restaura HP.', 'status-cures': 'Cura condições de status.', 'pp-recovery': 'Restaura PP dos golpes.', 'revival': 'Revive Pokémon desmaiados.', 'vitamins': 'Aumenta permanentemente os pontos de esforço (EVs) de um status.', 'stat-boosts': 'Aumenta temporariamente um status durante a batalha.', 'evolution': 'Faz certos Pokémon evoluírem.', 'all-machines': 'Disco que ensina um golpe a um Pokémon compatível.', 'species-candies': 'Doce que dá níveis a uma espécie específica.', 'nature-mints': 'Muda os efeitos da natureza de um Pokémon sobre seus status.', 'medicine': 'Remédio para cuidar dos Pokémon.', 'in-a-pinch': 'Baga que ativa quando o HP está baixo.', 'picky-healing': 'Baga que cura HP, mas pode confundir conforme o gosto do Pokémon.', 'type-protection': 'Baga que reduz o dano de um golpe super efetivo de um tipo.', 'effort-training': 'Item que dá EVs extras ao ganhar experiência.', 'jewels': 'Aumenta o dano de um golpe do tipo uma única vez.', 'scarves': 'Lenço usado em concursos.', 'mulch': 'Adubo para plantar bagas.', 'collectibles': 'Item colecionável, geralmente para vender.', 'loot': 'Tesouro que pode ser vendido.', 'bad-held-items': 'Item que prejudica o portador de algum jeito.', 'flutes': 'Flauta que cura status ou chama Pokémon.', 'gameplay': 'Item ligado a mecânicas do jogo.', 'plot-advancement': 'Item-chave para progredir na história.', 'unused': 'Item que não é usado nos jogos.', 'spelunking': 'Item para explorar cavernas.', 'training': 'Item de treino.', 'effort-drop': 'Baga que reduz os pontos de esforço (EVs).', 'species-specific': 'Item que só funciona em espécies específicas.', 'event-items': 'Item obtido em eventos.', 'dex-completion': 'Item relacionado à Pokédex.', 'catching-bonus': 'Item que ajuda a capturar Pokémon.', 'baking-only': 'Item usado para fazer comida.', 'memories': 'Disco de memória que muda o tipo do Silvally.', 'dynamax-crystals': 'Cristal usado em Raids Dynamax.', 'tera-shard': 'Fragmento usado para mudar o Tera Type.', 'sandwich-ingredients': 'Ingrediente de sanduíche.', 'curry-ingredients': 'Ingrediente de curry.', 'picnic': 'Item de piquenique.', 'tm-materials': 'Material para criar TMs.' };
+    const TYPEITEM = { 'charcoal': 'Fogo', 'mystic-water': 'Água', 'magnet': 'Elétrico', 'miracle-seed': 'Planta', 'never-melt-ice': 'Gelo', 'black-belt': 'Lutador', 'poison-barb': 'Veneno', 'soft-sand': 'Terra', 'sharp-beak': 'Voador', 'twisted-spoon': 'Psíquico', 'silver-powder': 'Inseto', 'hard-stone': 'Pedra', 'spell-tag': 'Fantasma', 'dragon-fang': 'Dragão', 'black-glasses': 'Sombrio', 'metal-coat': 'Aço', 'silk-scarf': 'Normal', 'fairy-feather': 'Fada' };
+    const ITPT = { 'poke-ball': 'Bola comum para capturar Pokémon selvagens.', 'great-ball': 'Captura melhor que a Poké Ball comum.', 'ultra-ball': 'Bola de alto desempenho, captura melhor que a Great Ball.', 'master-ball': 'Captura qualquer Pokémon selvagem sem falhar.', 'potion': 'Restaura uma pequena quantidade de HP.', 'super-potion': 'Restaura uma quantidade média de HP.', 'hyper-potion': 'Restaura bastante HP.', 'max-potion': 'Restaura todo o HP de um Pokémon.', 'full-restore': 'Restaura todo o HP e cura todas as condições de status.', 'revive': 'Revive um Pokémon desmaiado com metade do HP.', 'max-revive': 'Revive um Pokémon desmaiado com todo o HP.', 'antidote': 'Cura envenenamento.', 'paralyze-heal': 'Cura paralisia.', 'awakening': 'Acorda um Pokémon dormindo.', 'burn-heal': 'Cura queimadura.', 'ice-heal': 'Descongela um Pokémon.', 'full-heal': 'Cura todas as condições de status.', 'ether': 'Restaura PP de um golpe.', 'elixir': 'Restaura PP de todos os golpes.', 'rare-candy': 'Sobe um nível do Pokémon.', 'leftovers': 'Recupera 1/16 do HP máximo do portador no fim de cada turno.', 'choice-band': 'Aumenta o Ataque em 50%, mas só permite usar o primeiro golpe escolhido.', 'choice-specs': 'Aumenta o Ataque Especial em 50%, mas só permite usar o primeiro golpe escolhido.', 'choice-scarf': 'Aumenta a Velocidade em 50%, mas só permite usar o primeiro golpe escolhido.', 'life-orb': 'Aumenta o dano dos golpes em 30%, mas o portador perde 10% do HP a cada ataque.', 'focus-sash': 'Com HP cheio, o portador sobrevive a um golpe fatal com 1 HP (uma vez).', 'focus-band': 'Às vezes permite sobreviver a um golpe fatal com 1 HP.', 'assault-vest': 'Aumenta a Defesa Especial em 50%, mas impede o uso de golpes de status.', 'eviolite': 'Aumenta Defesa e Defesa Especial em 50% se o portador ainda pode evoluir.', 'rocky-helmet': 'Quem acertar o portador com golpe de contato perde 1/6 do HP.', 'sitrus-berry': 'Restaura 25% do HP quando o HP cai a 50% ou menos.', 'oran-berry': 'Restaura 10 HP quando o HP cai a 50% ou menos.', 'lum-berry': 'Cura qualquer condição de status, uma vez.', 'leppa-berry': 'Restaura PP de um golpe quando ele zera.', 'expert-belt': 'Aumenta em 20% o dano de golpes super efetivos.', 'muscle-band': 'Aumenta em 10% o dano de golpes físicos.', 'wise-glasses': 'Aumenta em 10% o dano de golpes especiais.', 'shell-bell': 'Recupera HP equivalente a 1/8 do dano causado.', 'scope-lens': 'Aumenta a chance de acerto crítico.', 'razor-claw': 'Aumenta a chance de acerto crítico.', 'kings-rock': 'Pode fazer o alvo hesitar quando o portador acerta um golpe.', 'quick-claw': 'Às vezes permite agir primeiro no turno.', 'light-ball': 'Dobra o Ataque e o Ataque Especial do Pikachu.', 'thick-club': 'Dobra o Ataque de Cubone e Marowak.', 'lucky-egg': 'Aumenta em 50% a experiência ganha pelo portador.', 'exp-share': 'Divide experiência com o portador mesmo sem ele lutar.', 'amulet-coin': 'Dobra o dinheiro ganho em batalhas.', 'everstone': 'Impede o portador de evoluir.', 'toxic-orb': 'Envenena gravemente o portador no fim do turno.', 'flame-orb': 'Queima o portador no fim do turno.', 'black-sludge': 'Recupera HP de Pokémon Veneno e fere os demais.', 'heavy-duty-boots': 'Protege contra os perigos de entrada (Stealth Rock, Spikes etc.).', 'safety-goggles': 'Protege contra golpes de pó/esporos e clima.', 'air-balloon': 'Torna o portador imune a golpes de Terra até ser atingido.', 'weakness-policy': 'Se atingido por golpe super efetivo, aumenta Ataque e Ataque Especial em 2 estágios.', 'mental-herb': 'Cura efeitos como Taunt e Encore, uma vez.', 'white-herb': 'Restaura status reduzidos, uma vez.', 'power-herb': 'Permite usar golpes de dois turnos em um só.', 'red-card': 'Quando atingido, força o atacante a trocar de Pokémon.', 'eject-button': 'Quando atingido, força o portador a trocar de Pokémon.', 'booster-energy': 'Ativa as habilidades Protosynthesis ou Quark Drive uma vez.' };
+    function ptText(n, cat) {
+      if (ITPT[n]) return ITPT[n];
+      if (TYPEITEM[n]) return `Aumenta em 20% o dano de golpes do tipo ${TYPEITEM[n]}.`;
+      if (/-plate$/.test(n)) return CATDESC.plates;
+      if (/-berry$/.test(n)) return 'Baga que o Pokémon pode comer. O efeito varia conforme a baga.';
+      if (/^(tm|hm|tr)\d+/.test(n)) return CATDESC['all-machines'];
+      return CATDESC[cat] || '';
+    }
+    let ITEMS = [], IMAP = {}, iCat = 'all', iQ = '', iList = [], iShown = 0, shownItem = '', itTimer; const IPAGE = 60, IDET = {};
+    async function loadItems() {
+      try {
+        const list = await fetch(API + 'item-category?limit=100').then(r => r.json());
+        const res = await Promise.all(list.results.map(c => fetch(c.url).then(r => r.json())));
+        const seen = new Map(), cats = [];
+        res.forEach(c => { cats.push([c.name, c.items.length]); c.items.forEach(it => { if (!seen.has(it.name)) seen.set(it.name, c.name) }) });
+        ITEMS = [...seen].map(([name, cat]) => ({ name, cat })); ITEMS.forEach(i => IMAP[i.name] = i);
+        $('#icat').innerHTML = `<option value="all">Todas as categorias (${ITEMS.length})</option>` + cats.map(c => `<option value="${c[0]}">${CATPT[c[0]] || nm(c[0])} (${c[1]})</option>`).join('');
+        iFilter();
+      } catch (err) {
+        $('#igrid').innerHTML = '<div class="msg">Não foi possível carregar os itens. Verifique a conexão e recarregue a página.</div>';
+      }
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); loadItems() } }, { rootMargin: '700px' }).observe($('#time'));
+    else loadItems();
+    $('#icat').onchange = e => { iCat = e.target.value; iFilter() };
+    $('#iq').oninput = e => { iQ = e.target.value.trim().toLowerCase().replace(/\s+/g, '-'); iFilter() };
+    $('#imore').onclick = iMore;
+    function iFilter() {
+      iList = ITEMS.filter(i => (iCat === 'all' || i.cat === iCat) && (!iQ || i.name.includes(iQ)));
+      iShown = 0; $('#igrid').innerHTML = '';
+      if (!iList.length) $('#igrid').innerHTML = '<div class="msg">Nenhum item encontrado.</div>';
+      iMore();
+    }
+    function iMore() {
+      const part = iList.slice(iShown, iShown + IPAGE);
+      $('#igrid').insertAdjacentHTML('beforeend', part.map(i => `<div class="ic ${selItem === i.name ? 'sel' : ''}" data-iname="${i.name}" data-drag="i:${i.name}" tabindex="0"><img loading="lazy" src="${IS}${i.name}.png" alt="" onerror="this.style.visibility='hidden'"><span>${nm(i.name)}</span></div>`).join(''));
+      iShown += part.length; $('#imore').style.display = iShown < iList.length ? 'block' : 'none';
+      $('#icount').textContent = iList.length ? `${iShown} de ${iList.length} itens` : '';
+    }
+    const markSel = () => document.querySelectorAll('.ic').forEach(c => c.classList.toggle('sel', c.dataset.iname === selItem));
+    function drawItem(n) {
+      const it = IMAP[n]; if (!it) return; const d = IDET[n], pt = ptText(n, it.cat);
+      $('#idet').innerHTML = `<img src="${IS}${n}.png" alt="" onerror="this.style.visibility='hidden'"><div><b>${nm(n)}</b><small>${CATPT[it.cat] || nm(it.cat)}</small>${pt ? `<p>${pt}</p>` : ''}${d === undefined ? '<p class="en">Carregando descrição oficial...</p>' : d ? `<p class="en"><i>Descrição oficial (inglês):</i> ${esc(d)}</p>` : ''}</div>`;
+    }
+    async function fetchDet(n) {
+      try {
+        const j = await fetch(API + 'item/' + n).then(r => r.json());
+        const e = (j.effect_entries || []).find(x => x.language.name === 'en'), f = (j.flavor_text_entries || []).filter(x => x.language.name === 'en').pop();
+        IDET[n] = ((e && (e.short_effect || e.effect)) || (f && f.text) || '').replace(/[\n\f]/g, ' ');
+      } catch (err) { IDET[n] = '' }
+      if (shownItem === n) drawItem(n);
+    }
+    function showItem(n) {
+      shownItem = n; drawItem(n); clearTimeout(itTimer);
+      if (IDET[n] === undefined) itTimer = setTimeout(() => fetchDet(n), 200);
+    }
+    $('#igrid').onmouseover = e => { const c = e.target.closest('[data-iname]'); if (c && c.dataset.iname !== shownItem) showItem(c.dataset.iname) };
+    $('#igrid').onclick = e => {
+      if (suppress) return; const c = e.target.closest('[data-iname]'); if (!c) return;
+      const n = c.dataset.iname; selItem = selItem === n ? null : n; markSel(); showItem(n);
+      say(selItem ? `Item selecionado: ${nm(n)}. Arraste até um Pokémon do time ou toque no Pokémon.` : '');
+    };
+
+    /* ---------- Login ---------- */
+    const auth = $('#auth');
+    function closeAuth() { auth.classList.remove('on') }
+    $('#ax').onclick = closeAuth; auth.onclick = e => { if (e.target === auth) closeAuth() };
+    $('#acct').onclick = () => { authView(DB.session ? 'acc' : 'in'); auth.classList.add('on') };
+    function renderAcct() { $('#acct').textContent = DB.session ? DB.users[DB.session].name : 'Entrar' }
+    function authView(v, err) {
+      if (DB.session) {
+        $('#abody').innerHTML = `<div class="hd"><h2>${esc(DB.users[DB.session].name)}</h2></div><p class="desc">Seus Pokémon capturados e seus times ficam salvos nesta conta, neste navegador.<br>Capturados: ${CAUGHT.size}</p><div class="btns" style="justify-content:center"><button class="mc" id="lo">Sair</button></div>`;
+        $('#lo').onclick = () => { DB.session = null; save(); refreshAll(); authView('in') };
+        return;
+      }
+      const reg = v === 'reg';
+      $('#abody').innerHTML = `<div class="atabs"><button class="ttab ${reg ? '' : 'on'}" data-av="in" style="background:#0ea5e9">Entrar</button><button class="ttab ${reg ? 'on' : ''}" data-av="reg" style="background:#16a34a">Criar conta</button></div>
+      <p class="desc" style="margin-top:0">${reg ? 'O progresso de convidado deste navegador é copiado para a conta nova.' : 'Sem login, o progresso fica salvo como convidado neste navegador.'}</p>
+      <form class="af" data-m="${reg ? 'reg' : 'in'}" autocomplete="on">
+        <label for="au">Usuário</label><input class="sin" id="au" name="u" maxlength="16" autocomplete="username" required>
+        <label for="ap">Senha</label><input class="sin" id="ap" name="p" type="password" minlength="4" autocomplete="${reg ? 'new-password' : 'current-password'}" required>
+        <div class="err" role="alert">${err ? esc(err) : ''}</div>
+        <div class="btns" style="justify-content:center"><button class="mc ${reg ? 'green' : 'blue'}" type="submit">${reg ? 'Criar conta' : 'Entrar'}</button></div>
+      </form>`;
+    }
+    $('#abody').addEventListener('click', e => { const b = e.target.closest('[data-av]'); if (b) authView(b.dataset.av) });
+    $('#abody').addEventListener('submit', async e => {
+      e.preventDefault(); const f = e.target, u = f.u.value.trim(), p = f.p.value, reg = f.dataset.m === 'reg', key = u.toLowerCase();
+      if (!/^[A-Za-z0-9_]{3,16}$/.test(u)) return authView(reg ? 'reg' : 'in', 'Use de 3 a 16 letras, números ou _ no usuário.');
+      if (p.length < 4) return authView(reg ? 'reg' : 'in', 'A senha precisa ter pelo menos 4 caracteres.');
+      if (reg) {
+        if (DB.users[key]) return authView('reg', 'Esse usuário já existe. Escolha outro nome.');
+        const salt = Math.random().toString(36).slice(2) + Date.now().toString(36);
+        DB.users[key] = { name: u, salt, hash: await hashPw(p, salt), data: norm(JSON.parse(JSON.stringify(DB.guest))) };
+      } else {
+        const acc = DB.users[key];
+        if (!acc || acc.hash !== await hashPw(p, acc.salt)) return authView('in', 'Usuário ou senha incorretos.');
+      }
+      DB.session = key; save(); refreshAll(); authView('acc');
+    });
+
+    /* ---------- Atualiza tudo quando muda o perfil ---------- */
+    function refreshAll() {
+      CAUGHT = new Set(me().caught); selItem = null; markSel(); say('');
+      fixBall(); renderAcct(); renderLegends(); modeUI(); renderSlots(); tFilter();
+    }
+    ready.then(() => { if (!ALL.length) return; ALL.forEach(p => BYID[p.id] = p); refreshAll() });
+    refreshAll();
   </script>
 </body>
 
